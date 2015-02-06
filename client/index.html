@@ -45,6 +45,11 @@
 <div class="row">
 	<div class="col-sm-3">
       <!-- Left column -->
+
+      <button type="button" class="btn btn-warning" ng-click="showHgIn()"><span id="check-incoming">Check incoming</span></button>
+
+      <hr>
+
       <ul class="list-unstyled">
         <li class="nav-header"> 
           <a href="#" data-toggle="collapse" data-target="#userMenu">
@@ -131,7 +136,7 @@
 
       <div class="row" ng-show="singleRepoDetail">
         <div class="col-md-2">
-          <button type="button" class="btn btn-warning">hg in</button>
+          <button type="button" class="btn btn-warning" ng-click="showHgIn()">hg in</button>
         </div>
 
       </div>

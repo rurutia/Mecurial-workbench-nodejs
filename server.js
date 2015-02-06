@@ -55,6 +55,44 @@ http.createServer(function (request, response) {
         filePath = './client/index.html';
         serveFile(response, filePath);
     }
+    else if (request.url.indexOf('/hg/in/') > -1)
+    {
+        console.log(request.url);
+        var repoName = request.url.replace('/hg/in/', '');
+
+        var exec = require('child_process').exec,
+        child;
+
+        var repoDir = '/home/myu/repositories/' + repoName;
+        console.log(repoDir);
+        child = exec("hg -R " + repoDir + " in",
+
+          function (error, stdout, stderr) {
+            console.log(stdout); 
+            
+            var infoArray = stdout.replace( /\n/g, "%").split('%');
+            var obj = { hasIncomingChange : true };
+            for(var e in infoArray) {
+                            console.log(infoArray[e]); 
+
+                if(infoArray[e].indexOf('no changes found') > -1) {
+                    obj.hasIncomingChange = false;
+                }
+            }
+            // console.log(newDirArray);
+            response.writeHead(200, {"Content-Type": "application/json"});
+            var json = JSON.stringify(obj);
+            
+            console.log(json);
+            response.end(json);
+
+
+            if (error !== null) {
+              console.log('exec error: ' + error);
+          }
+
+      });
+    }
     else if (request.url.indexOf('/list/') > -1)
     {
         console.log(request.url);
@@ -62,23 +100,9 @@ http.createServer(function (request, response) {
 
         var exec = require('child_process').exec,
         child;
-// hg -R /home/myu/repositories/cpf log -l 1
 
         var repoDir = '/home/myu/repositories/' + repoName;
         child = exec("hg -R " + repoDir + " log -l 1 -v",
-          // function (error, stdout, stderr) {
-          //   var obj = {branch: stdout};
-          //   // console.log(newDirArray);
-          //   response.writeHead(200, {"Content-Type": "application/json"});
-          //   var json = JSON.stringify(obj);
-
-          //   console.log(json);
-          //   response.end(json);
-
-
-          //   if (error !== null) {
-          //     console.log('exec error: ' + error);
-          // }
 
           function (error, stdout, stderr) {
             var infoArray = stdout.replace( /\n/g, "!").split('!');
@@ -98,7 +122,6 @@ http.createServer(function (request, response) {
             if (error !== null) {
               console.log('exec error: ' + error);
           }
-
 
       });
     }
