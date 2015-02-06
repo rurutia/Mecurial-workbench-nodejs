@@ -3,6 +3,21 @@ var fs = require('fs');
 var path = require('path');
 var util = require('util');
 
+var config = require('./config.js');
+var process = require('./process.js');
+
+var _ = {};
+_.filter = function(arr, callback) {
+    var newArr = [];
+    for(var e in arr) {
+        console.log(arr[e]);
+        if(callback(arr[e])) {
+            newArr.push(arr[e]);
+        }
+    }
+    return newArr;
+}; 
+
 function serveFile(response, filePath) {
     var extname = path.extname(filePath);
     var contentType = 'text/html';
@@ -37,18 +52,6 @@ function serveFile(response, filePath) {
 
 };
 
-var _ = {};
-_.filter = function(arr, callback) {
-    var newArr = [];
-    for(var e in arr) {
-        console.log(arr[e]);
-        if(callback(arr[e])) {
-            newArr.push(arr[e]);
-        }
-    }
-    return newArr;
-};
-
 http.createServer(function (request, response) {
     var filePath = '.' + request.url;
     if (request.url == '/') {
@@ -60,16 +63,11 @@ http.createServer(function (request, response) {
         console.log(request.url);
         var repoName = request.url.replace('/hg/in/', '');
 
-        var exec = require('child_process').exec,
-        child;
-
-        var repoDir = '/home/myu/repositories/' + repoName;
+        var repoDir = config.repoDir + repoName;
         console.log(repoDir);
-        child = exec("hg -R " + repoDir + " in",
+        var command = "hg -R " + repoDir + " in";
 
-          function (error, stdout, stderr) {
-            console.log(stdout); 
-            
+        process.sendReponse(response, command, function(stdout) {
             var infoArray = stdout.replace( /\n/g, "%").split('%');
             var obj = { hasIncomingChange : true };
             for(var e in infoArray) {
@@ -79,62 +77,33 @@ http.createServer(function (request, response) {
                     obj.hasIncomingChange = false;
                 }
             }
-            // console.log(newDirArray);
-            response.writeHead(200, {"Content-Type": "application/json"});
-            var json = JSON.stringify(obj);
-            
-            console.log(json);
-            response.end(json);
-
-
-            if (error !== null) {
-              console.log('exec error: ' + error);
-          }
-
-      });
+            return obj;
+        });
     }
     else if (request.url.indexOf('/list/') > -1)
     {
         console.log(request.url);
         var repoName = request.url.replace('/list/', '');
 
-        var exec = require('child_process').exec,
-        child;
+        var repoDir = config.repoDir + repoName;
+        var command = "hg -R " + repoDir + " log -l 1 -v";
 
-        var repoDir = '/home/myu/repositories/' + repoName;
-        child = exec("hg -R " + repoDir + " log -l 1 -v",
-
-          function (error, stdout, stderr) {
+        process.sendReponse(response, command, function(stdout) {
             var infoArray = stdout.replace( /\n/g, "!").split('!');
             var obj = {};
             for(var e in infoArray) {
                 var valuePair = infoArray[e].split(": ");
                 obj[valuePair[0]] = valuePair[1];
             }
-            // console.log(newDirArray);
-            response.writeHead(200, {"Content-Type": "application/json"});
-            var json = JSON.stringify(obj);
-            
-            console.log(json);
-            response.end(json);
-
-
-            if (error !== null) {
-              console.log('exec error: ' + error);
-          }
-
-      });
+            return obj;
+        });
     }
     else if (request.url == '/list')
     {
-        var exec = require('child_process').exec,
-        child;
-
-        var repoDir = '/home/myu/repositories/';
-        child = exec("find " + repoDir + " -maxdepth 1 -type d",
-          function (error, stdout, stderr) {
+        var command = "find " + config.repoDir + " -maxdepth 1 -type d";
+        process.sendReponse(response, command, function(stdout) {
             var dirArray = stdout.replace( /\n/g, " ");
-            var reg = new RegExp(repoDir, 'g')
+            var reg = new RegExp(config.repoDir, 'g')
             dirArray = dirArray.replace(reg, "");
             // .replace(/\n/g, '')
             dirArray = dirArray.split( " " );
@@ -144,53 +113,14 @@ http.createServer(function (request, response) {
                     return true;
                 }
             });
-            // console.log(newDirArray);
-            response.writeHead(200, {"Content-Type": "application/json"});
-            var json = JSON.stringify(newDirArray);
-            // console.log(json);
-            response.end(json);
-
-
-            if (error !== null) {
-              console.log('exec error: ' + error);
-            }
-          });
+            return newDirArray;
+        });
     }
     else {
         filePath = './client/' + filePath;
         serveFile(response, filePath);
     }
 
-    // var extname = path.extname(filePath);
-    // var contentType = 'text/html';
-    // switch (extname) {
-    //     case '.js':
-    //         contentType = 'text/javascript';
-    //         break;
-    //     case '.css':
-    //         contentType = 'text/css';
-    //         break;
-    // }
+}).listen(config.port);
 
-    // fs.exists(filePath, function (exists) {
-
-    //     if (exists) {
-    //         fs.readFile(filePath, function (error, content) {
-    //             if (error) {
-    //                 response.writeHead(500);
-    //                 response.end();
-    //             }
-    //             else {
-    //                 response.writeHead(200, { 'Content-Type': contentType });
-    //                 response.end(content, 'utf-8');
-    //             }
-    //         });
-    //     }
-    //     else {
-    //         response.writeHead(404);
-    //         response.end();
-    //     }
-    // });
-
-}).listen(3000);
-console.log('Server running at http://127.0.0.1:3000/');
+console.log('Server running at http://127.0.0.1:' + config.port + '/');
