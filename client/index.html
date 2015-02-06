@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="IMMecurialApp">
+	<head>
+		<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+		<meta charset="utf-8">
+		<title>Bootstrap 3 Admin</title>
+		<meta name="generator" content="Bootply" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+		<link href="./css/bootstrap.min.css" rel="stylesheet">
+		<!--[if lt IE 9]>
+			<script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+		<![endif]-->
+		<link href="./css/styles.css" rel="stylesheet">
+	</head>
+	<body>
+<!-- Header -->
+<div id="top-nav" class="navbar navbar-inverse navbar-static-top">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="#">Infomedix Mercurial Workbench</a>
+    </div>
+    <div class="navbar-collapse collapse">
+      <ul class="nav navbar-nav navbar-right">
+        
+        <li class="dropdown">
+          <a class="dropdown-toggle" role="button" data-toggle="dropdown" href="#"><i class="glyphicon glyphicon-user"></i> Admin <span class="caret"></span></a>
+          <ul id="g-account-menu" class="dropdown-menu" role="menu">
+            <li><a href="#">My Profile</a></li>
+          </ul>
+        </li>
+        <li><a href="#"><i class="glyphicon glyphicon-lock"></i> Logout</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+<!-- /Header -->
+
+<!-- Main -->
+<div class="container-fluid" ng-controller="menuCtrl">
+<div class="row">
+	<div class="col-sm-3">
+      <!-- Left column -->
+      <ul class="list-unstyled">
+        <li class="nav-header"> 
+          <a href="#" data-toggle="collapse" data-target="#userMenu">
+          	<h5>Repositories  <i class="glyphicon glyphicon-chevron-down"></i></h5>
+          </a>
+            <ul class="list-unstyled collapse in" id="userMenu">
+            <li ng-repeat="repo in repoList"> <a href="#" ng-click="showRepoDetail(repo)"><i class="glyphicon glyphicon-flag"></i> {{repo}}</a></li>
+<!--                 <li class="active"> <a href="#"><i class="glyphicon glyphicon-home"></i> Home</a></li>
+                <li><a href="#"><i class="glyphicon glyphicon-envelope"></i> Messages <span class="badge badge-info">4</span></a></li>
+                <li><a href="#"><i class="glyphicon glyphicon-cog"></i> Options</a></li>
+                <li><a href="#"><i class="glyphicon glyphicon-comment"></i> Shoutbox</a></li>
+                <li><a href="#"><i class="glyphicon glyphicon-user"></i> Staff List</a></li>
+                <li><a href="#"><i class="glyphicon glyphicon-flag"></i> Transactions</a></li>
+                <li><a href="#"><i class="glyphicon glyphicon-exclamation-sign"></i> Rules</a></li>
+                <li><a href="#"><i class="glyphicon glyphicon-off"></i> Logout</a></li> -->
+            </ul>
+        </li>
+        <li class="nav-header"> <a href="#" data-toggle="collapse" data-target="#menu2">
+          <h5>Settings <i class="glyphicon glyphicon-chevron-right"></i></h5>
+          </a>
+        
+<!--             <ul class="list-unstyled collapse" id="menu2">
+                <li><a href="#">Information &amp; Stats</a>
+                </li>
+                <li><a href="#">Views</a>
+                </li>
+                <li><a href="#">Requests</a>
+                </li>
+                <li><a href="#">Timetable</a>
+                </li>
+                <li><a href="#">Alerts</a>
+                </li>
+            </ul> -->
+        </li>
+        <li class="nav-header">
+        <a href="#" data-toggle="collapse" data-target="#menu3">
+          <h5>Resources <i class="glyphicon glyphicon-chevron-right"></i></h5>
+          </a>
+        
+            <ul class="list-unstyled collapse" id="menu3">
+                <li><a href="#"><i class="glyphicon glyphicon-circle"></i> Useful Links</a></li>
+                <li><a href="#"><i class="glyphicon glyphicon-circle"></i> Documents</a></li>
+            </ul>
+        </li>
+      </ul>
+           
+      <hr>
+      
+      <a href="#"><strong><i class="glyphicon glyphicon-link"></i> Attachments</strong></a>  
+      
+      <hr>
+      
+      <!-- <ul class="nav nav-pills nav-stacked">
+        <li class="nav-header"></li>
+        <li><a href="#"><i class="glyphicon glyphicon-list"></i> Layouts &amp; Templates</a></li>
+        <li><a href="#"><i class="glyphicon glyphicon-briefcase"></i> Toolbox</a></li>
+        <li><a href="#"><i class="glyphicon glyphicon-link"></i> Widgets</a></li>
+        <li><a href="#"><i class="glyphicon glyphicon-list-alt"></i> Reports</a></li>
+        <li><a href="#"><i class="glyphicon glyphicon-book"></i> Pages</a></li>
+        <li><a href="#"><i class="glyphicon glyphicon-star"></i> Social Media</a></li>
+      </ul> -->
+      
+<!--       <hr>
+      <ul class="nav nav-stacked">
+        <li class="active"><a href="http://bootply.com" title="The Bootstrap Playground" target="ext">Playground</a></li>
+        <li><a href="/tagged/bootstrap-3">Bootstrap 3</a></li>
+        <li><a href="/61518" title="Bootstrap 3 Panel">Panels</a></li>
+        <li><a href="/61521" title="Bootstrap 3 Icons">Glyphicons</a></li>
+        <li><a href="/62603">Layout</a></li>
+      </ul> -->
+
+      
+      
+  	</div><!-- /col-3 -->
+    <div class="col-sm-9">
+
+      <div class="row">
+        <div class="col-md-12">
+          <ul class="list-group">
+            <li ng-repeat="(key, value) in singleRepoDetail" class="list-group-item"><a href="#"><i class="glyphicon glyphicon-flash"></i> <small>{{key}} : </small> {{value}}</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="row" ng-show="singleRepoDetail">
+        <div class="col-md-2">
+          <button type="button" class="btn btn-warning">hg in</button>
+        </div>
+
+      </div>
+
+    </div>
+</div>
+<!-- /Main -->
+
+<footer class="text-center">@Infomedix Pty Ltd</footer>
+
+
+  
+	<!-- script references -->
+		<script src="js/jquery-1.11.1.min.js"></script>
+		<script src="js/bootstrap.min.js"></script>
+		<script src="js/scripts.js"></script>
+    <script src="js/angular/angular.js"></script>
+    <script src="js/angular/angular-resource.js"></script>
+    <script src="js/angular-modules/angular-ui-router.js"></script>
+    <script src="js/app.module.js"></script>
+	</body>
+</html>
