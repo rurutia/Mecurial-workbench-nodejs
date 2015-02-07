@@ -13,14 +13,16 @@ angular.module('IMMecurialApp', ['ngResource'])
   		if($scope.repoList) {
   			var flags = {};
   			angular.forEach($scope.repoList, function(repo) {
-  				// flags[key] = true;
-  				$('span#check-incoming').html('Check...');
   				repo.isLoading = true;
 	  			$http({method: 'GET', url: '/hg/in/' + repo.name}).
 			   		success(function(data, status, headers, config) {
-			   			if(data.hasIncomingChange ) {
-			   				repo.name = repo.name + '(incoming)';
-			   			}
+		   				repo.hasIncomingChange = data.hasIncomingChange;
+		   				if(repo.hasIncomingChange) {
+		   					repo.info = "has incoming change(s)";
+		   				}
+		   				else {
+		   					repo.info = '';
+		   				}
 			   			repo.isLoading = false;
 			  		}).
 			   		error(function(data, status, headers, config) {
@@ -30,11 +32,41 @@ angular.module('IMMecurialApp', ['ngResource'])
 
   	};
 
+  	$scope.addAll = function() {
+  		$http({method: 'GET', url: '/addAll/' + $scope.currentRepoName}).
+	  		success(function(data, status, headers, config) {
+		  		$http({method: 'GET', url: '/status/' + $scope.currentRepoName}).
+			  		success(function(data, status, headers, config) {
+			  			$scope.statusMap = data;
+			  		}).
+			  		error(function(data, status, headers, config) {
+			  		});
+		  	}).
+	  		error(function(data, status, headers, config) {
+	  		});
+
+  	};
+
   	$scope.showRepoDetail = function(repoName) {
-  		$scope.currenRepoName = repoName;
+  		$scope.currentRepoName = repoName;
   		$http({method: 'GET', url: '/list/' + repoName}).
 	  		success(function(data, status, headers, config) {
 	  			$scope.singleRepoDetail = data;
+	  		}).
+	  		error(function(data, status, headers, config) {
+	  		});
+
+	  	$http({method: 'GET', url: '/status/' + repoName}).
+	  		success(function(data, status, headers, config) {
+	  			$scope.statusMap = data;
+	  		}).
+	  		error(function(data, status, headers, config) {
+	  		});
+
+
+	  	$http({method: 'GET', url: '/branch/' + repoName}).
+	  		success(function(data, status, headers, config) {
+	  			$scope.currentBranchName = data[0];
 	  		}).
 	  		error(function(data, status, headers, config) {
 	  		});
@@ -45,6 +77,7 @@ angular.module('IMMecurialApp', ['ngResource'])
 	  		$scope.repoList = data;
 	  		angular.forEach($scope.repoList, function(repo){
 	  			repo.isLoading = false;
+	  			repo.hasIncomingChange  = false
 	  		});
 	  	}).
 	  	error(function(data, status, headers, config) {

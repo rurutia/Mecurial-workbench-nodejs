@@ -3,7 +3,7 @@ var fs = require('fs');
 var path = require('path');
 var util = require('util');
 
-var config = require('./config.js');
+var config = require('./config.json');
 var process = require('./process.js');
 
 var _ = {};
@@ -22,11 +22,35 @@ _.filter = function(arr, callback) {
 _.mapObject = function(arr, key, callback) {
     var newArr = [];
     for(var e in arr) {
-        console.log(arr[e]);
         if(callback(arr[e])) {
             var obj = {};
             obj[key] = arr[e];
             newArr.push(obj);
+        }
+    }
+    return newArr;
+}; 
+
+var STATUS_CODE_DESCRIPTION_MAP = {
+    '!' : 'Deleted(but tracked)',
+    '?' : 'Unknown',
+    'A' : 'Added',
+    'M' : 'Modified',
+    'R' : 'Removed'
+};
+
+_.mapStatusObject = function(arr, checkEmpty) {
+    var newArr = {};
+    for(var e in arr) {
+        var row = arr[e];
+        if(checkEmpty(row)) {
+            var pieces = row.split(" ");
+            var code = pieces[0] + " - " + STATUS_CODE_DESCRIPTION_MAP[pieces[0]];
+            var file = pieces[1];
+            if(!newArr[code]) {
+                newArr[code] = [];
+            }
+            newArr[code].push(file);
         }
     }
     return newArr;
@@ -71,6 +95,59 @@ http.createServer(function (request, response) {
     if (request.url == '/') {
         filePath = './client/index.html';
         serveFile(response, filePath);
+    }
+    else if (request.url.indexOf('/addAll/') > -1)
+    {
+        console.log(request.url);
+        var repoName = request.url.replace('/addAll/', '');
+
+        var repoDir = config.repoDir + repoName;
+        var command = "hg -R " + repoDir + " add " + repoDir + "/.";
+
+        process.sendReponse(response, command, function(stdout) {
+            var infoArray = stdout.replace( /\n/g, "%").split('%');
+            return infoArray;
+        });
+    }
+
+    else if (request.url.indexOf('/branch/') > -1)
+    {
+        console.log(request.url);
+        var repoName = request.url.replace('/branch/', '');
+
+        var repoDir = config.repoDir + repoName;
+        var command = "hg -R " + repoDir + " branch";
+
+        process.sendReponse(response, command, function(stdout) {
+            var infoArray = stdout.replace( /\n/g, "%").split('%');
+            return infoArray;
+        });
+    }
+    else if (request.url.indexOf('/status/') > -1)
+    {
+        console.log(request.url);
+        var repoName = request.url.replace('/status/', '');
+
+        var repoDir = config.repoDir + repoName;
+        var command = "hg -R " + repoDir + " status";
+
+        process.sendReponse(response, command, function(stdout) {
+            var infoArray = stdout.replace( /\n/g, "%").split('%');
+            var infoArrayNoBlank = _.filter(infoArray, function(elm) {
+                if(elm && elm.length > 0) {
+                    return true;
+                }
+            });
+
+            var statusCodeFileList = _.mapStatusObject(infoArray, function(elm) {
+                if(elm && elm.length > 0) {
+                    return true;
+                }
+            });
+
+            console.log(statusCodeFileList);
+            return statusCodeFileList;
+        });
     }
     else if (request.url.indexOf('/hg/in/') > -1)
     {

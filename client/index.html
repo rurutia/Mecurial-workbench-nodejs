@@ -3,7 +3,7 @@
 	<head>
 		<meta http-equiv="content-type" content="text/html; charset=UTF-8">
 		<meta charset="utf-8">
-		<title>Bootstrap 3 Admin</title>
+		<title>Infomedix Mercurial Workbench</title>
 		<meta name="generator" content="Bootply" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 		<link href="./css/bootstrap.min.css" rel="stylesheet">
@@ -45,23 +45,24 @@
 <div class="row">
 	<div class="col-sm-3">
       <!-- Left column -->
-
-      <button type="button" class="btn btn-warning" ng-click="showHgIn()"><span id="check-incoming">Check incoming</span></button>
-
-      <hr>
-
       <ul class="list-unstyled">
         <li class="nav-header"> 
           <a href="#" data-toggle="collapse" data-target="#userMenu">
           	<h5>Repositories  <i class="glyphicon glyphicon-chevron-down"></i></h5>
           </a>
             <ul class="list-unstyled collapse in" id="userMenu">
-            <li ng-repeat="repo in repoList"> <a href="#" ng-click="showRepoDetail(repo.name)">
+            <li> 
+              <button type="button" class="btn btn-primary btn-xs" ng-click="showHgIn()">hg in</button>
+            </li>
+            <li ng-repeat="repo in repoList"> 
+              <a href="#" ng-click="showRepoDetail(repo.name)" title="{{repo.info}}">
  
-              <i ng-show="!repo.isLoading" ng-class="{'glyphicon':true, 'glyphicon-flag':true, 'warning':true}"></i>
-              <div ng-show="repo.isLoading" ng-class="{'glyphicon-loader':true}"></div> 
- 
-            {{repo.name}}{{repo.isLoading}}</a></li>
+                <i ng-show="!repo.isLoading" ng-class="{'glyphicon':true, 'glyphicon-list-alt':true, 'warning':repo.hasIncomingChange}"></i>
+                <div ng-show="repo.isLoading" ng-class="{'glyphicon-loader':true}"></div> 
+   
+                {{repo.name}}
+              </a>
+            </li>
 <!--                 <li class="active"> <a href="#"><i class="glyphicon glyphicon-home"></i> Home</a></li>
                 <li><a href="#"><i class="glyphicon glyphicon-envelope"></i> Messages <span class="badge badge-info">4</span></a></li>
                 <li><a href="#"><i class="glyphicon glyphicon-cog"></i> Options</a></li>
@@ -107,44 +108,85 @@
       
       <hr>
       
-      <!-- <ul class="nav nav-pills nav-stacked">
-        <li class="nav-header"></li>
-        <li><a href="#"><i class="glyphicon glyphicon-list"></i> Layouts &amp; Templates</a></li>
-        <li><a href="#"><i class="glyphicon glyphicon-briefcase"></i> Toolbox</a></li>
-        <li><a href="#"><i class="glyphicon glyphicon-link"></i> Widgets</a></li>
-        <li><a href="#"><i class="glyphicon glyphicon-list-alt"></i> Reports</a></li>
-        <li><a href="#"><i class="glyphicon glyphicon-book"></i> Pages</a></li>
-        <li><a href="#"><i class="glyphicon glyphicon-star"></i> Social Media</a></li>
-      </ul> -->
-      
-<!--       <hr>
-      <ul class="nav nav-stacked">
-        <li class="active"><a href="http://bootply.com" title="The Bootstrap Playground" target="ext">Playground</a></li>
-        <li><a href="/tagged/bootstrap-3">Bootstrap 3</a></li>
-        <li><a href="/61518" title="Bootstrap 3 Panel">Panels</a></li>
-        <li><a href="/61521" title="Bootstrap 3 Icons">Glyphicons</a></li>
-        <li><a href="/62603">Layout</a></li>
-      </ul> -->
-
-      
-      
   	</div><!-- /col-3 -->
     <div class="col-sm-9">
 
-      <div class="row">
-        <div class="col-md-12">
-          <ul class="list-group">
-            <li ng-repeat="(key, value) in singleRepoDetail" class="list-group-item"><a href="#"><i class="glyphicon glyphicon-flash"></i> <small>{{key}} : </small> {{value}}</a></li>
-          </ul>
+    <div role="tabpanel">
+
+      <!-- tabs -->
+      <ul class="nav nav-tabs" role="tablist">
+        <li role="presentation" class="active"><a href="#status" aria-controls="status" role="tab" data-toggle="tab">Status</a></li>
+        <li role="presentation"><a href="#log" aria-controls="log" role="tab" data-toggle="tab">Log</a></li>
+        <li role="presentation"><a href="#commit" aria-controls="commit" role="tab" data-toggle="tab">Commit</a></li>
+      </ul>
+
+      <!-- Tab panes -->
+      <div class="tab-content">
+        <div role="tabpanel" class="tab-pane active" id="status">
+          <div class="row">
+            <div class="col-md-12">
+
+              <div class="panel panel-default" ng-show="currentBranchName">
+                <div class="panel-heading">
+                  <h3 class="panel-title">branch: <b>{{currentBranchName}}</b></h3>
+                </div>
+                <div class="panel-body">
+<!--                   <ul class="list-group">
+                    <li ng-repeat="status in statusList" class="list-group-item"><a href="#"><i class="glyphicon glyphicon-flash"></i> {{status}}</a></li>
+                  </ul> -->
+
+                  <ul class="list-group">
+                    <li ng-repeat="(status, files) in statusMap" class="list-group-item">
+                      <div class="row">
+                        <div class="col-md-2">
+                          <div>{{status}}</div>
+                        </div>
+                        <div class="col-md-2">
+                          <button ng-show="status.indexOf('Unknown') > -1" type="button" class="btn btn-warning" ng-click="addAll()">add all</button>
+                        </div>
+                      </div>
+                        <ul class="list-group">
+                          <li ng-repeat="file in files" class="list-group-item"><a href="#"><i class="glyphicon glyphicon-flash"></i> {{file}}</a></li>
+                        </ul>
+                    </li>
+                  </ul>
+
+
+                </div>
+              </div>
+
+            </div>
+          </div>
+
         </div>
+
+        <div role="tabpanel" class="tab-pane" id="log">
+          
+          <div class="row">
+            <div class="col-md-12">
+              <ul class="list-group">
+                <li ng-repeat="(key, value) in singleRepoDetail" class="list-group-item"><a href="#"><i class="glyphicon glyphicon-flash"></i> <small>{{key}} : </small> {{value}}</a></li>
+              </ul>
+            </div>
+          </div>
+
+<!--           <div class="row" ng-show="singleRepoDetail">
+            <div class="col-md-2">
+              <button type="button" class="btn btn-warning" ng-click="showHgIn()">hg in</button>
+            </div>
+          </div> -->
+
+        </div>
+
+        <div role="tabpanel" class="tab-pane" id="commit">To be implemented</div>
       </div>
 
-      <div class="row" ng-show="singleRepoDetail">
-        <div class="col-md-2">
-          <button type="button" class="btn btn-warning" ng-click="showHgIn()">hg in</button>
-        </div>
+    </div> <!-- end of table panel -->
 
-      </div>
+
+
+
+
 
     </div>
 </div>

@@ -1,5 +1,5 @@
 var exec = require('child_process').exec,
-    config = require('./config.js'),
+    config = require('./config.json'),
     child;
 
    
