@@ -18,6 +18,20 @@ _.filter = function(arr, callback) {
     return newArr;
 }; 
 
+
+_.mapObject = function(arr, key, callback) {
+    var newArr = [];
+    for(var e in arr) {
+        console.log(arr[e]);
+        if(callback(arr[e])) {
+            var obj = {};
+            obj[key] = arr[e];
+            newArr.push(obj);
+        }
+    }
+    return newArr;
+}; 
+
 function serveFile(response, filePath) {
     var extname = path.extname(filePath);
     var contentType = 'text/html';
@@ -105,15 +119,16 @@ http.createServer(function (request, response) {
             var dirArray = stdout.replace( /\n/g, " ");
             var reg = new RegExp(config.repoDir, 'g')
             dirArray = dirArray.replace(reg, "");
-            // .replace(/\n/g, '')
             dirArray = dirArray.split( " " );
-            console.log(dirArray);
-            var newDirArray = _.filter(dirArray, function(elm) {
+
+            var repoList = _.mapObject(dirArray, 'name', function(elm) {
                 if(elm && elm.length > 0) {
                     return true;
                 }
             });
-            return newDirArray;
+
+            console.log(repoList);
+            return repoList;
         });
     }
     else {

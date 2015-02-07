@@ -56,7 +56,12 @@
           	<h5>Repositories  <i class="glyphicon glyphicon-chevron-down"></i></h5>
           </a>
             <ul class="list-unstyled collapse in" id="userMenu">
-            <li ng-repeat="repo in repoList"> <a href="#" ng-click="showRepoDetail(repo)"><i class="glyphicon glyphicon-flag"></i> {{repo}}</a></li>
+            <li ng-repeat="repo in repoList"> <a href="#" ng-click="showRepoDetail(repo.name)">
+ 
+              <i ng-show="!repo.isLoading" ng-class="{'glyphicon':true, 'glyphicon-flag':true, 'warning':true}"></i>
+              <div ng-show="repo.isLoading" ng-class="{'glyphicon-loader':true}"></div> 
+ 
+            {{repo.name}}{{repo.isLoading}}</a></li>
 <!--                 <li class="active"> <a href="#"><i class="glyphicon glyphicon-home"></i> Home</a></li>
                 <li><a href="#"><i class="glyphicon glyphicon-envelope"></i> Messages <span class="badge badge-info">4</span></a></li>
                 <li><a href="#"><i class="glyphicon glyphicon-cog"></i> Options</a></li>

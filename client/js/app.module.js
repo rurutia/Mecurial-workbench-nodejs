@@ -9,28 +9,19 @@ angular.module('IMMecurialApp', ['ngResource'])
   })
   .controller('menuCtrl', function($scope, RepoList, $http) {
   	$scope.showHgIn = function() {
-  		// if($scope.currenRepoName) {
-	  	// 	$http({method: 'GET', url: '/hg/in/' + $scope.currenRepoName}).
-		  // 		success(function(data, status, headers, config) {
-		  // 			alert(data.hasIncomingChange);
-		  // 			// $scope.singleRepoDetail = data;
-		  // 		}).
-		  // 		error(function(data, status, headers, config) {
-		  // 		});
-  		// }
+
   		if($scope.repoList) {
   			var flags = {};
-  			angular.forEach($scope.repoList, function(value, key) {
+  			angular.forEach($scope.repoList, function(repo) {
   				// flags[key] = true;
   				$('span#check-incoming').html('Check...');
-	  			$http({method: 'GET', url: '/hg/in/' + value}).
+  				repo.isLoading = true;
+	  			$http({method: 'GET', url: '/hg/in/' + repo.name}).
 			   		success(function(data, status, headers, config) {
 			   			if(data.hasIncomingChange ) {
-			   				value = 'incoming';
-			   				$scope.repoList[key] = $scope.repoList[key] + '(incoming)';
-			   				console.log(key);
-			   				// $('span#check-incoming').html('Check incoming');
+			   				repo.name = repo.name + '(incoming)';
 			   			}
+			   			repo.isLoading = false;
 			  		}).
 			   		error(function(data, status, headers, config) {
 			  		});
@@ -52,6 +43,9 @@ angular.module('IMMecurialApp', ['ngResource'])
   	$http({method: 'GET', url: '/list'}).
 	  	success(function(data, status, headers, config) {
 	  		$scope.repoList = data;
+	  		angular.forEach($scope.repoList, function(repo){
+	  			repo.isLoading = false;
+	  		});
 	  	}).
 	  	error(function(data, status, headers, config) {
 	  	});
