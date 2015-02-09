@@ -8,6 +8,7 @@ angular.module('IMMecurialApp', ['ngResource'])
 	  );
   })
   .controller('menuCtrl', function($scope, RepoList, $http) {
+  	$scope.fileList = [];
   	$scope.showHgIn = function() {
 
   		if($scope.repoList) {
@@ -32,8 +33,20 @@ angular.module('IMMecurialApp', ['ngResource'])
 
   	};
 
-  	$scope.addAll = function() {
-  		$http({method: 'GET', url: '/addAll/' + $scope.currentRepoName}).
+  	$scope.add = function(files) {
+  		var selectedFiles = [];
+  		if(files){
+	  		selectedFiles = $(files).filter(function(i, file) {
+	  			if(file.isSelected) {
+	  				return file;
+	  			}
+	  		}); 
+	  		if(selectedFiles.length == 0)
+	  			return false;
+  		}
+
+
+  		$http({method: 'POST', url: '/add/' + $scope.currentRepoName, data: selectedFiles}).
 	  		success(function(data, status, headers, config) {
 		  		$http({method: 'GET', url: '/status/' + $scope.currentRepoName}).
 			  		success(function(data, status, headers, config) {
@@ -43,8 +56,11 @@ angular.module('IMMecurialApp', ['ngResource'])
 			  		});
 		  	}).
 	  		error(function(data, status, headers, config) {
-	  		});
+	  		});  		
+  	};
 
+  	$scope.changeCurrentStatus = function(status) {
+  		$scope.currentStatus = status;
   	};
 
   	$scope.showRepoDetail = function(repoName) {

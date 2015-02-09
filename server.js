@@ -50,7 +50,7 @@ _.mapStatusObject = function(arr, checkEmpty) {
             if(!newArr[code]) {
                 newArr[code] = [];
             }
-            newArr[code].push(file);
+            newArr[code].push({'name': file});
         }
     }
     return newArr;
@@ -96,20 +96,47 @@ http.createServer(function (request, response) {
         filePath = './client/index.html';
         serveFile(response, filePath);
     }
-    else if (request.url.indexOf('/addAll/') > -1)
+
+    else if (request.url.indexOf('/add/') > -1)
     {
         console.log(request.url);
-        var repoName = request.url.replace('/addAll/', '');
+        var repoName = request.url.replace('/add/', '');
 
-        var repoDir = config.repoDir + repoName;
-        var command = "hg -R " + repoDir + " add " + repoDir + "/.";
-
-        process.sendReponse(response, command, function(stdout) {
-            var infoArray = stdout.replace( /\n/g, "%").split('%');
-            return infoArray;
+        var body = '';
+        request.on('data', function (data) {
+            body += data;
         });
-    }
+        request.on('end', function () {
+            var files = Array.prototype.slice.call(JSON.parse(body));
+            console.log("-----------");
+            console.log(files);
+            var repoDir = config.repoDir + repoName;
+            var command = "hg -R " + repoDir + " add";
+            for(var i in files) {
+                var file = files[i]['name'];
+                command += " " + repoDir + "/" + file;
+            }
+            console.log(command);
+            process.sendReponse(response, command, function(stdout) {
+                var infoArray = stdout.replace( /\n/g, "%").split('%');
+                return infoArray;
+            });
+        });
 
+    }
+    // else if (request.url.indexOf('/addAll/') > -1)
+    // {
+    //     console.log(request.url);
+    //     var repoName = request.url.replace('/addAll/', '');
+
+    //     var repoDir = config.repoDir + repoName;
+    //     var command = "hg -R " + repoDir + " add " + repoDir + "/.";
+
+    //     process.sendReponse(response, command, function(stdout) {
+    //         var infoArray = stdout.replace( /\n/g, "%").split('%');
+    //         return infoArray;
+    //     });
+    // }
     else if (request.url.indexOf('/branch/') > -1)
     {
         console.log(request.url);
@@ -198,9 +225,13 @@ http.createServer(function (request, response) {
             dirArray = dirArray.replace(reg, "");
             dirArray = dirArray.split( " " );
 
-            var repoList = _.mapObject(dirArray, 'name', function(elm) {
-                if(elm && elm.length > 0) {
-                    return true;
+            var repoList = _.mapObject(dirArray, 'name', function(dir) {
+                if(dir && dir.length > 0) {
+                    var fullPath = config.repoDir + dir + '/.hg';
+                    if (fs.existsSync(fullPath)) {
+                        return true;
+                    }
+
                 }
             });
 
