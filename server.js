@@ -97,6 +97,30 @@ http.createServer(function (request, response) {
         serveFile(response, filePath);
     }
 
+    else if (request.url.indexOf('/raw/') > -1)
+    {
+        console.log(request.url);
+        var repoName = request.url.replace('/raw/', '');
+
+        var body = '';
+        request.on('data', function (data) {
+            body += data;
+        });
+        request.on('end', function () {
+            console.log("-----------");
+            console.log(body);
+            var repoDir = config.repoDir + repoName;
+            var command = "hg -R " + repoDir + " " + body;
+
+            console.log(command);
+            process.sendReponse(response, command, function(stdout) {
+                var result = {result: stdout};
+                return result;
+            });
+        });
+
+    }
+
     else if (request.url.indexOf('/add/') > -1)
     {
         console.log(request.url);

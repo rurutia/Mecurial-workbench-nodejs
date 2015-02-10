@@ -10,6 +10,13 @@ i {
   margin-top: 10px;
 }
 
+.highlight {
+  background-color: #428bca;
+  color: #fff;
+  padding: 2px;
+  border-radius: 3px;
+}
+
 /*.nav > li > a {
   color:#787878;
 }*/
@@ -51,6 +58,13 @@ footer {
 /* glyphicon related */
 .glyphicon-loader {
   background-image: url("../images/ajax_loader_15.gif");
+  width:  15px;
+  height: 15px;
+  display: inline-block;
+}
+
+.glyphicon-loader-grey {
+  background-image: url("../images/ajax_loader_15_grey.GIF");
   width:  15px;
   height: 15px;
   display: inline-block;

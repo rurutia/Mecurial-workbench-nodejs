@@ -7,6 +7,7 @@
 		<meta name="generator" content="Bootply" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 		<link href="./css/bootstrap.min.css" rel="stylesheet">
+    <link rel="icon" type="image/png" href="/images/hg_icon.png" />
 		<!--[if lt IE 9]>
 			<script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
 		<![endif]-->
@@ -119,6 +120,7 @@
         <li role="presentation"><a href="#log" aria-controls="log" role="tab" data-toggle="tab">Log</a></li>
         <li role="presentation"><a href="#commit" aria-controls="commit" role="tab" data-toggle="tab">Commit</a></li>
         <li role="presentation"><a href="#shelve" aria-controls="shelve" role="tab" data-toggle="tab">Shelve</a></li>
+        <li role="presentation"><a href="#raw" aria-controls="raw" role="tab" data-toggle="tab">Raw</a></li>
       </ul>
 
       <!-- Tab panes -->
@@ -162,7 +164,7 @@
 
                         <ul class="list-unstyled">
                           <li ng-repeat="file in files">
-                            <input type="checkbox" ng-model="file.isSelected"> <a href="#">{{file.name }}</a>
+                            <input type="checkbox" style="height:15px;width:15px;" ng-model="file.isSelected" ng-click="toggleFileLinkStyle($event)"><a href="#">{{file.name }}</a>
                           </li>
                         </ul>
                     </li>
@@ -193,6 +195,36 @@
         <div role="tabpanel" class="tab-pane" id="commit">To be implemented</div>
 
         <div role="tabpanel" class="tab-pane" id="shelve">To be implemented</div>
+
+        <div role="tabpanel" class="tab-pane" id="raw">
+          <div class="row">
+            <div class="col-md-12">
+              <div class="spacer"></div>
+              <form class="form-horizontal">
+                <div class="input-group input-group-lg">
+                  <span class="input-group-addon">
+                  <div ng-show="command.isLoading" ng-class="{'glyphicon-loader-grey':true}"></div> 
+                  hg -R {{currentRepoName}}
+                  </span>
+                  <input type="text" class="form-control" id="command" placeholder="enter command here..." ng-model="command.text" ng-keydown="issueCommand($event)">
+                  <span class="input-group-btn">
+                    <button type="button" id="issue" class="btn btn-warning" ng-click="issueCommand()">Issue!</button>
+                  </span>
+                </div>
+
+                <div class="spacer"></div>
+
+                <div class="form-group">
+                <label for="result" class="col-sm-1 control-label">Result</label>
+                  <div class="col-sm-10">
+                    <textarea rows="28" id="result" name="result" class="form-control" ng-model="command.result"></textarea>
+                  </div>
+                </div>
+
+              </form>
+            </div>
+          </div>
+        </div>
       </div>
 
     </div> <!-- end of table panel -->
@@ -206,7 +238,7 @@
 </div>
 <!-- /Main -->
 
-<footer class="text-center">@Infomedix Pty Ltd</footer>
+<footer class="text-center">Copyright@Infomedix Pty Ltd Developed by Michael Yu 2015. All Rights Reserved</footer>
 
 
   

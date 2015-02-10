@@ -9,8 +9,9 @@ angular.module('IMMecurialApp', ['ngResource'])
   })
   .controller('menuCtrl', function($scope, RepoList, $http) {
   	$scope.fileList = [];
-  	$scope.showHgIn = function() {
+  	$scope.command = {};
 
+  	$scope.showHgIn = function() {
   		if($scope.repoList) {
   			var flags = {};
   			angular.forEach($scope.repoList, function(repo) {
@@ -31,6 +32,25 @@ angular.module('IMMecurialApp', ['ngResource'])
   			});
   		}
 
+  	};
+
+  	$scope.toggleFileLinkStyle = function(e) {
+  		$(e.target).parent().find('a').toggleClass("highlight");
+  	};
+ 
+
+   	$scope.issueCommand = function(e) {
+   		if(!e || e.keyCode == 13) {
+   			$scope.command.isLoading = true;
+	  		$http({method: 'POST', url: '/raw/' + $scope.currentRepoName, data: $scope.command.text}).
+		  		success(function(data, status, headers, config) {
+					console.log(data);
+					$scope.command.result = data.result;
+					$scope.command.isLoading = false;
+			  	}).
+		  		error(function(data, status, headers, config) {
+		  		});  		
+   		}
   	};
 
   	$scope.add = function(files) {
