@@ -1,23 +1,26 @@
 var exec = require('child_process').exec,
-    config = require('./config.json'),
-    child;
+    config = require('./config.json');
 
-   
+function CommandExecutor() {
+	var self = this;
+	var command, parseConsole;
+	var successCallback;
+	var executeConcrete = function() {
+		exec(command,
+			function (error, stdout, stderr) {
+				successCallback.call(self, parseConsole(stdout));
+			});
+	};
 
-var process = {
-	sendReponse: function(response, command, getResponse) {
-		child = exec(command,
-          function (error, stdout, stderr) {
+	this.then = function(arg1) {
+		successCallback = arg1;
+		executeConcrete();
+	};
+	this.execute = function(arg1, arg2) {
+		command = arg1;
+		parseConsole = arg2;
+		return self;
+	};
+};   
 
-			var responseObj = getResponse(stdout);
-
-            response.writeHead(200, {"Content-Type": "application/json"});
-            var json = JSON.stringify(responseObj);
-
-            response.end(json);
-
-          });
-	}
-}
-
-module.exports = process;
+module.exports = new CommandExecutor();
