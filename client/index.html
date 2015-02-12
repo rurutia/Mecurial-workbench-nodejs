@@ -42,74 +42,14 @@
 <!-- /Header -->
 
 <!-- Main -->
-<div class="container-fluid" ng-controller="menuCtrl">
+<div class="container-fluid app-container" ng-controller="mainCtrl">
 <div class="row">
-	<div class="col-sm-3">
-      <!-- Left column -->
-      <ul class="list-unstyled">
-        <li class="nav-header"> 
-          <a href="#" data-toggle="collapse" data-target="#userMenu">
-          	<h5>Repositories  <i class="glyphicon glyphicon-chevron-down"></i></h5>
-          </a>
-            <ul class="list-unstyled collapse in" id="userMenu">
-            <li> 
-              <button type="button" class="btn btn-primary btn-xs" ng-click="showHgIn()">check changes</button>
-            </li>
-            <li ng-repeat="repo in repoList"> 
-              <a href="#" ng-click="showRepoDetail(repo.name)" title="{{repo.info}}">
- 
-                <i ng-show="!repo.isLoading" ng-class="{'glyphicon':true, 'glyphicon-list-alt':true, 'warning':repo.hasIncomingChange}"></i>
-                <div ng-show="repo.isLoading" ng-class="{'glyphicon-loader':true}"></div> 
    
-                <span ng-class="{'btn':currentRepoName == repo.name, 'btn-primary':currentRepoName == repo.name}">{{repo.name}}</span>
-              </a>
-            </li>
-<!--                 <li class="active"> <a href="#"><i class="glyphicon glyphicon-home"></i> Home</a></li>
-                <li><a href="#"><i class="glyphicon glyphicon-envelope"></i> Messages <span class="badge badge-info">4</span></a></li>
-                <li><a href="#"><i class="glyphicon glyphicon-cog"></i> Options</a></li>
-                <li><a href="#"><i class="glyphicon glyphicon-comment"></i> Shoutbox</a></li>
-                <li><a href="#"><i class="glyphicon glyphicon-user"></i> Staff List</a></li>
-                <li><a href="#"><i class="glyphicon glyphicon-flag"></i> Transactions</a></li>
-                <li><a href="#"><i class="glyphicon glyphicon-exclamation-sign"></i> Rules</a></li>
-                <li><a href="#"><i class="glyphicon glyphicon-off"></i> Logout</a></li> -->
-            </ul>
-        </li>
-        <li class="nav-header"> <a href="#" data-toggle="collapse" data-target="#menu2">
-          <h5>Settings <i class="glyphicon glyphicon-chevron-right"></i></h5>
-          </a>
-        
-<!--             <ul class="list-unstyled collapse" id="menu2">
-                <li><a href="#">Information &amp; Stats</a>
-                </li>
-                <li><a href="#">Views</a>
-                </li>
-                <li><a href="#">Requests</a>
-                </li>
-                <li><a href="#">Timetable</a>
-                </li>
-                <li><a href="#">Alerts</a>
-                </li>
-            </ul> -->
-        </li>
-        <li class="nav-header">
-        <a href="#" data-toggle="collapse" data-target="#menu3">
-          <h5>Resources <i class="glyphicon glyphicon-chevron-right"></i></h5>
-          </a>
-        
-            <ul class="list-unstyled collapse" id="menu3">
-                <li><a href="#"><i class="glyphicon glyphicon-circle"></i> Useful Links</a></li>
-                <li><a href="#"><i class="glyphicon glyphicon-circle"></i> Documents</a></li>
-            </ul>
-        </li>
-      </ul>
-           
-      <hr>
-      
-      <a href="#"><strong><i class="glyphicon glyphicon-link"></i> Attachments</strong></a>  
-      
-      <hr>
-      
-  	</div><!-- /col-3 -->
+    <!-- menu -->
+    <div class="col-sm-3">
+      <app-menu current-repo="currentRepo"></app-menu>
+    </div><!-- /col-3 -->
+
     <div class="col-sm-9">
 
     <div role="tabpanel">
@@ -130,9 +70,9 @@
           <div class="row">
             <div class="col-md-12">
 
-              <div class="panel panel-default" ng-show="currentBranchName">
+              <div class="panel panel-default" ng-show="currentRepo.currentBranchName">
                 <div class="panel-heading">
-                  <h3 class="panel-title">branch: <b>{{currentBranchName}}</b></h3>
+                  <h3 class="panel-title">branch: <b>{{currentRepo.currentBranchName}}</b></h3>
                 </div>
                 <div class="panel-body">
 
@@ -143,14 +83,14 @@
                       <span class="sr-only">Toggle Dropdown</span>
                     </button>
                     <ul class="dropdown-menu" role="menu">
-                      <li ng-repeat="(status, files) in statusMap"><a href="#" ng-click="changeCurrentStatus(status)">{{status}}</a></li>
+                      <li ng-repeat="(status, files) in currentRepo.statusMap"><a href="#" ng-click="changeCurrentStatus(status)">{{status}}</a></li>
                     </ul>
                   </div>
 
                   <div class="spacer"></div>
 
                   <ul class="list-group">
-                    <li ng-repeat="(status, files) in statusMap" class="list-group-item"  ng-show="status == currentStatus || !currentStatus">
+                    <li ng-repeat="(status, files) in currentRepo.statusMap" class="list-group-item"  ng-show="status == currentStatus || !currentStatus">
                       <div class="row">
                         <div class="col-md-2">
                           <div><b>{{status}}</b></div>
@@ -185,7 +125,7 @@
           <div class="row">
             <div class="col-md-12">
               <ul class="list-group">
-                <li ng-repeat="(key, value) in singleRepoDetail" class="list-group-item"><a href="#"><i class="glyphicon glyphicon-flash"></i> <small>{{key}} : </small> {{value}}</a></li>
+                <li ng-repeat="(key, value) in currentRepo.log" class="list-group-item"><a href="#"><i class="glyphicon glyphicon-flash"></i> <small>{{key}} : </small> {{value}}</a></li>
               </ul>
             </div>
           </div>
@@ -193,7 +133,16 @@
 
         </div>
 
-        <div role="tabpanel" class="tab-pane" id="commit">To be implemented</div>
+        <div role="tabpanel" class="tab-pane" id="commit">
+          <form>
+            <div class="form-group">
+            <label for="commitMsg">Message</label>
+              <textarea class="form-control" ng-model="currentRepo.commitMsg" id="commitMsg" placeholder="Enter commit message..." rows="20"></textarea>
+            </div>
+            <button type="button" class="btn btn-warning" ng-click="commit()">Commit!</button>
+          </form>
+
+        </div>
 
         <div role="tabpanel" class="tab-pane" id="shelve">To be implemented</div>
 
@@ -205,7 +154,7 @@
                 <div class="input-group input-group-lg">
                   <span class="input-group-addon">
                   <div ng-show="command.isLoading" ng-class="{'glyphicon-loader-grey':true}"></div> 
-                  hg -R {{currentRepoName}}
+                  hg -R {{currentRepo.name}}
                   </span>
                   <input type="text" class="form-control" id="command" placeholder="enter command here..." ng-model="command.text" ng-keydown="issueCommand($event)">
                   <span class="input-group-btn">
@@ -264,15 +213,7 @@
           </div>
 
           <div class="spacer"></div>
-          
-
-
-<!--           <div class="form-group">
-            <label for="result" class="col-sm-1 control-label">Result</label>
-            <div class="col-sm-10">
-            <textarea rows="25" class="form-control" ng-model="branchDiff.result"></textarea>
-            </div>
-          </div> -->
+        
 
           <div class="col-md-12">
             <div class="spacer"></div>
@@ -332,5 +273,7 @@
     <script src="js/angular/angular-resource.js"></script>
     <script src="js/angular-modules/angular-ui-router.js"></script>
     <script src="js/app.module.js"></script>
+
+    <script src="menu/menu-directive.js"></script>
 	</body>
 </html>

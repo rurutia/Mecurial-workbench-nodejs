@@ -1,13 +1,17 @@
 'use strict';
 
 // Declare app level module which depends on filters, and services
-angular.module('IMMecurialApp', ['ngResource'])
+angular.module('IMMecurialApp', ['ngResource', 'menuModule'])
   .factory('RepoList', function($resource){
 	  return $resource(
 			  '/list'
 	  );
   })
-  .controller('menuCtrl', function($scope, RepoList, $http) {
+  .controller('mainCtrl', function($scope, RepoList, $http) {
+  	$scope.currentRepo = {};
+
+  	$scope.currentRepo.commitMsg = "#Ticket-\n---\nFunctional requirement:\n\n\n---\nSolution:\n\n\n---\nCode notes:";
+
   	$scope.fileList = [];
   	$scope.command = {};
   	$scope.branchDiff = {};
@@ -18,31 +22,32 @@ angular.module('IMMecurialApp', ['ngResource'])
   		$scope.ticketsOrderBy = orderBy;
   	};
 
-  	$scope.showHgIn = function() {
-  		if($scope.repoList) {
-  			var flags = {};
-  			angular.forEach($scope.repoList, function(repo) {
-  				repo.isLoading = true;
-	  			$http({method: 'GET', url: '/hg/in/' + repo.name}).
-			   		success(function(data, status, headers, config) {
-		   				repo.hasIncomingChange = data.hasIncomingChange;
-		   				if(repo.hasIncomingChange) {
-		   					repo.info = "has incoming change(s)";
-		   				}
-		   				else {
-		   					repo.info = '';
-		   				}
-			   			repo.isLoading = false;
-			  		}).
-			   		error(function(data, status, headers, config) {
-			  		});
-  			});
-  		}
-
-  	};
 
   	$scope.toggleFileLinkStyle = function(e) {
   		$(e.target).parent().find('a').toggleClass("highlight");
+  	};
+
+  	$scope.commit = function() {
+  		console.log($scope.currentRepo.commitMsg);
+  		$http({
+  			method: 'POST', 
+  			url: '/commit/' + $scope.currentRepo.name, 
+  			data: {message: $scope.currentRepo.commitMsg}
+  		}).
+	  		success(function(data, status, headers, config) {
+	  			console.log(data);
+
+
+					$http({method: 'GET', url: '/list/' + $scope.currentRepo.name}).
+						success(function(data, status, headers, config) {
+							$scope.currentRepo.log = data;
+						}).
+						error(function(data, status, headers, config) {
+						});
+
+	  		}).
+	  		error(function(data, status, headers, config) {
+	  		});  
   	};
  
 
@@ -51,7 +56,7 @@ angular.module('IMMecurialApp', ['ngResource'])
    			$scope.command.isLoading = true;
 	  		$http({
 	  			method: 'POST', 
-	  			url: '/raw/' + $scope.currentRepoName, 
+	  			url: '/raw/' + $scope.currentRepo.name, 
 	  			data: {command: $scope.command.text}
 	  		}).
 		  		success(function(data, status, headers, config) {
@@ -68,7 +73,7 @@ angular.module('IMMecurialApp', ['ngResource'])
    			$scope.command.isLoading = true;
 	  		$http({
 	  			method: 'POST', 
-	  			url: '/diffBranches/' + $scope.currentRepoName, 
+	  			url: '/diffBranches/' + $scope.currentRepo.name, 
 	  			data: {branch1: $scope.branchDiff.branch1, branch2: $scope.branchDiff.branch2}
 	  		}).
 		  		success(function(data, status, headers, config) {
@@ -95,11 +100,11 @@ angular.module('IMMecurialApp', ['ngResource'])
   		}
 
 
-  		$http({method: 'POST', url: '/add/' + $scope.currentRepoName, data: selectedFiles}).
+  		$http({method: 'POST', url: '/add/' + $scope.currentRepo.name, data: selectedFiles}).
 	  		success(function(data, status, headers, config) {
-		  		$http({method: 'GET', url: '/status/' + $scope.currentRepoName}).
+		  		$http({method: 'GET', url: '/status/' + $scope.currentRepo.name}).
 			  		success(function(data, status, headers, config) {
-			  			$scope.statusMap = data;
+			  			$scope.currentRepo.statusMap = data;
 			  		}).
 			  		error(function(data, status, headers, config) {
 			  		});
@@ -112,41 +117,7 @@ angular.module('IMMecurialApp', ['ngResource'])
   		$scope.currentStatus = status;
   	};
 
-  	$scope.showRepoDetail = function(repoName) {
-  		$scope.currentRepoName = repoName;
-  		$http({method: 'GET', url: '/list/' + repoName}).
-	  		success(function(data, status, headers, config) {
-	  			$scope.singleRepoDetail = data;
-	  		}).
-	  		error(function(data, status, headers, config) {
-	  		});
 
-	  	$http({method: 'GET', url: '/status/' + repoName}).
-	  		success(function(data, status, headers, config) {
-	  			$scope.statusMap = data;
-	  		}).
-	  		error(function(data, status, headers, config) {
-	  		});
-
-
-	  	$http({method: 'GET', url: '/branch/' + repoName}).
-	  		success(function(data, status, headers, config) {
-	  			$scope.currentBranchName = data[0];
-	  		}).
-	  		error(function(data, status, headers, config) {
-	  		});
-  	};
-
-  	$http({method: 'GET', url: '/list'}).
-	  	success(function(data, status, headers, config) {
-	  		$scope.repoList = data;
-	  		angular.forEach($scope.repoList, function(repo){
-	  			repo.isLoading = false;
-	  			repo.hasIncomingChange  = false
-	  		});
-	  	}).
-	  	error(function(data, status, headers, config) {
-	  	});
 
   })
   ;

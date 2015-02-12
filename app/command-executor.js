@@ -12,6 +12,7 @@ function CommandExecutor(command) {
 			});
 	};
 
+	console.log('Executing command: ' + command);
 	this.command = command;
 	this.then = function(callback) {
 		successCallback = callback;

@@ -17,6 +17,10 @@ i {
   border-radius: 3px;
 }
 
+.app-container {
+  margin-bottom: 50px; /* height of footer */
+}
+
 /*.nav > li > a {
   color:#787878;
 }*/
@@ -27,9 +31,10 @@ footer {
   padding-bottom:20px;
   background-color:#efefef;
   width:100%;
-  position:absolute;
+  position:fixed;
   bottom:0;
   left:0;
+  height: 50px;
 }
 
 /* count indicator near icons */

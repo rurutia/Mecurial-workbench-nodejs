@@ -135,6 +135,7 @@ router.get('/status/:name', function(req, res) {
 
             return statusCodeFileList;
         }).then(function(consoleObj) {
+            console.log(consoleObj)
             res.json(consoleObj);
         });
 });
@@ -213,6 +214,30 @@ router.post('/diffBranches/:name', function(req, res) {
             console.log(consoleObj);
             res.json({result: consoleObj});
         });
+});
+
+router.post('/commit/:name', function(req, res) {
+    var repoName = req.params.name;
+    var repoDir = config.repoDir + repoName;
+
+    var data = req.body;
+    var fs = require('fs');
+    var filePath = config.repoDir + repoName + '/temp.txt';
+    var wstream = fs.createWriteStream(filePath);
+    wstream.write(data.message);
+    wstream.end();
+
+    var command = "hg -R " + repoDir + " commit -l " + filePath;
+
+    var ce = new commandExecutor(command);
+    ce.execute(function(stdout) {
+        console.log(stdout);
+        fs.unlinkSync(filePath);
+        return {};
+    }).then(function(consoleObj) {
+        console.log(consoleObj);
+        res.json({result: consoleObj});
+    });
 });
 
 
