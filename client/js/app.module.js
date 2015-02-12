@@ -14,6 +14,10 @@ angular.module('IMMecurialApp', ['ngResource'])
 
   	$scope.ticketsOrderBy = 'number';
 
+  	$scope.updateTicketsOrderBy = function(orderBy) {
+  		$scope.ticketsOrderBy = orderBy;
+  	};
+
   	$scope.showHgIn = function() {
   		if($scope.repoList) {
   			var flags = {};

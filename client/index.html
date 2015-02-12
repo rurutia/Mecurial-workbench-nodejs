@@ -282,12 +282,10 @@
                 <span class="caret"></span>
               </button>
               <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
-              <li role="presentation" ng-repeat="orderBy in ['assignee', 'number', 'description']" ng-click="ticketsOrderBy=orderBy"><a role="menuitem" tabindex="-1" href="#">{{orderBy}}</a></li>
+              <li role="presentation" ng-repeat="orderBy in ['assignee', 'number', 'description']" ng-click="updateTicketsOrderBy(orderBy)"><a role="menuitem" tabindex="-1" href="#">{{orderBy}}</a></li>
               </ul>
             </div>
           </div>
-
-{{ticketsOrderBy}}
 
           <table class="table table-striped">
             <thead>
