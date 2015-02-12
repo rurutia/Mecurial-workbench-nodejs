@@ -158,6 +158,63 @@ router.post('/add/:name', function(req, res) {
         });
 });
 
+router.post('/raw/:name', function(req, res) {
+        var repoName = req.params.name;
+        var repoDir = config.repoDir + repoName;
+
+        var rawCommand = req.body;
+        var command = "hg -R " + repoDir + " " + rawCommand.command;
+
+        var ce = new commandExecutor(command);
+        ce.execute(function(stdout) {
+            console.log(stdout);
+            var infoArray = stdout.replace( /\n/g, "%").split('%');
+            var resultStr = ''
+            for(var e in infoArray) {
+                resultStr += infoArray[e] + '\n';
+            }
+            return resultStr;
+        }).then(function(consoleObj) {
+            console.log(consoleObj);
+            res.json({result: consoleObj});
+        });
+});
+
+router.post('/diffBranches/:name', function(req, res) {
+        var repoName = req.params.name;
+        var repoDir = config.repoDir + repoName;
+
+        var branch1 = req.body.branch1;
+        var branch2 = req.body.branch2;
+        console.log(branch1);
+        console.log(branch2);
+        var command = repoDir + "/hg_diffs.sh" + " " + branch1 + " " + branch2;
+        console.log(command);
+
+        var ce = new commandExecutor(command);
+        ce.execute(function(stdout) {
+            console.log(stdout);
+            var infoArray = stdout.replace( /\n/g, "%").split('%');
+            
+            var tickets = [];
+            for(var e in infoArray) {
+                if(infoArray[e].indexOf('---') > -1) {
+                    var parts = infoArray[e].split('---');
+                    var ticketNum = parts[0];
+                    var description = parts[1];
+                    var assignee = parts[2];
+                    tickets.push({number: ticketNum, description: description, assignee: assignee});
+                    
+                }
+            }
+
+            return tickets;
+        }).then(function(consoleObj) {
+            console.log(consoleObj);
+            res.json({result: consoleObj});
+        });
+});
+
 
 // REGISTER OUR ROUTES -------------------------------
 // all of our routes will be prefixed with /api

@@ -10,6 +10,9 @@ angular.module('IMMecurialApp', ['ngResource'])
   .controller('menuCtrl', function($scope, RepoList, $http) {
   	$scope.fileList = [];
   	$scope.command = {};
+  	$scope.branchDiff = {};
+
+  	$scope.ticketsOrderBy = 'number';
 
   	$scope.showHgIn = function() {
   		if($scope.repoList) {
@@ -42,7 +45,11 @@ angular.module('IMMecurialApp', ['ngResource'])
    	$scope.issueCommand = function(e) {
    		if(!e || e.keyCode == 13) {
    			$scope.command.isLoading = true;
-	  		$http({method: 'POST', url: '/raw/' + $scope.currentRepoName, data: $scope.command.text}).
+	  		$http({
+	  			method: 'POST', 
+	  			url: '/raw/' + $scope.currentRepoName, 
+	  			data: {command: $scope.command.text}
+	  		}).
 		  		success(function(data, status, headers, config) {
 					console.log(data);
 					$scope.command.result = data.result;
@@ -52,6 +59,24 @@ angular.module('IMMecurialApp', ['ngResource'])
 		  		});  		
    		}
   	};
+
+  	$scope.diffBranches = function() {
+   			$scope.command.isLoading = true;
+	  		$http({
+	  			method: 'POST', 
+	  			url: '/diffBranches/' + $scope.currentRepoName, 
+	  			data: {branch1: $scope.branchDiff.branch1, branch2: $scope.branchDiff.branch2}
+	  		}).
+		  		success(function(data, status, headers, config) {
+					console.log(data);
+					$scope.branchDiff.tickets = data.result;
+					$scope.command.isLoading = false;
+			  	}).
+		  		error(function(data, status, headers, config) {
+		  		});  		
+  	};
+
+  	
 
   	$scope.add = function(files) {
   		var selectedFiles = [];
