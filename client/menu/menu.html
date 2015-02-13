@@ -8,12 +8,12 @@
         <button type="button" class="btn btn-primary btn-xs" ng-click="showHgIn()">check changes</button>
       </li>
       <li ng-repeat="repo in repoList"> 
-        <a href="#" ng-click="showRepoDetail(repo.name)" title="{{repo.info}}">
+        <a href="#" ng-click="getRepoDetail(repo)" title="{{repo.info}}">
 
           <i ng-show="!repo.isLoading" ng-class="{'glyphicon':true, 'glyphicon-list-alt':true, 'warning':repo.hasIncomingChange}"></i>
           <div ng-show="repo.isLoading" ng-class="{'glyphicon-loader':true}"></div> 
 
-          <span ng-class="{'btn':currentRepo.name == repo.name, 'btn-primary':currentRepo.name == repo.name}">{{repo.name}}</span>
+          <span ng-class="{'btn':currentRepo.name == repo.name, 'btn-info':currentRepo.name == repo.name}">{{repo.name}} ({{repo.branch.name}})</span>
         </a>
       </li>
       </ul>

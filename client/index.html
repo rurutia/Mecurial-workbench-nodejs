@@ -50,9 +50,20 @@
       <app-menu current-repo="currentRepo"></app-menu>
     </div><!-- /col-3 -->
 
-    <div class="col-sm-9">
+    <div class="col-sm-9"  ng-if="currentRepo.name != null">
 
-    <div role="tabpanel">
+      <div role="tabpanel">
+        <div class="panel panel-info">
+          <div class="panel-heading">
+            Branch: <b style="font-size: 140%"><a target="_blank" href="https://jira.objectconsulting.com.au/browse/{{currentRepo.branch.name}}">{{currentRepo.branch.name}}</a></b> 
+            by <b>{{currentRepo.branch.logs[0].user}}</b> 
+            @ <b>{{currentRepo.branch.logs[0].date}}</b>
+          </div>
+          <div class="panel-body">
+            {{currentRepo.branch.logs[0].summary}}
+          </div>
+        </div>
+
 
       <!-- tabs -->
       <ul class="nav nav-tabs" role="tablist">
@@ -69,13 +80,7 @@
         <div role="tabpanel" class="tab-pane active" id="status">
           <div class="row">
             <div class="col-md-12">
-
-              <div class="panel panel-default" ng-show="currentRepo.currentBranchName">
-                <div class="panel-heading">
-                  <h3 class="panel-title">branch: <b>{{currentRepo.currentBranchName}}</b></h3>
-                </div>
-                <div class="panel-body">
-
+                  <div class="spacer"></div>
                   <div class="btn-group">
                     <button type="button" class="btn btn-primary btn-xs" ng-click="currentStatus = null">show all status</button>
                     <button type="button" class="btn btn-primary btn-xs dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
@@ -111,26 +116,13 @@
                     </li>
                   </ul>
 
-
-                </div>
-              </div>
-
             </div>
           </div>
 
         </div>
 
         <div role="tabpanel" class="tab-pane" id="log">
-          
-          <div class="row">
-            <div class="col-md-12">
-              <ul class="list-group">
-                <li ng-repeat="(key, value) in currentRepo.log" class="list-group-item"><a href="#"><i class="glyphicon glyphicon-flash"></i> <small>{{key}} : </small> {{value}}</a></li>
-              </ul>
-            </div>
-          </div>
-
-
+          N/A
         </div>
 
         <div role="tabpanel" class="tab-pane" id="commit">
@@ -274,6 +266,7 @@
     <script src="js/angular-modules/angular-ui-router.js"></script>
     <script src="js/app.module.js"></script>
 
+    <script src="shared/web-service.js"></script>
     <script src="menu/menu-directive.js"></script>
 	</body>
 </html>

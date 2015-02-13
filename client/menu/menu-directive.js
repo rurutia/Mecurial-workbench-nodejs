@@ -1,5 +1,5 @@
-angular.module('menuModule', [])
-.directive('appMenu', function($http) {
+angular.module('menuModule', ['WebService'])
+.directive('appMenu', function($http, httpService) {
 	return {
 		restrict: 'E',
 		templateUrl: 'menu/menu.html',
@@ -7,30 +7,36 @@ angular.module('menuModule', [])
 			currentRepo : "="
 		},
 		link: function(scope, elm, attrs) {
-			$http({method: 'GET', url: '/list'}).
-				success(function(data, status, headers, config) {
+			httpService.getRepositories()
+				.success(function(data, status, headers, config) {
 					scope.repoList = data;
 					angular.forEach(scope.repoList, function(repo){
 						repo.isLoading = false;
-						repo.hasIncomingChange  = false
+						repo.hasIncomingChange  = false;
+						httpService.getRepositoryBranch(repo.name)
+							.success(function(data) {
+								repo.branch = data;
+							});
 					});
 				}).
 				error(function(data, status, headers, config) {
 				});
 
-				scope.showRepoDetail = function(repoName) {
-					scope.currentRepo.name = repoName;
-					$http({method: 'GET', url: '/list/' + repoName}).
+
+				scope.getRepoDetail = function(repo) {
+					scope.currentRepo = repo;
+
+					$http({method: 'GET', url: '/list/' + repo.name}).
 						success(function(data, status, headers, config) {
-							scope.currentRepo.log = data;
+							scope.currentRepo.branch.logs = data;
 						}).
 						error(function(data, status, headers, config) {
 						});
 
-					$http({method: 'GET', url: '/status/' + repoName}).
+
+					$http({method: 'GET', url: '/status/' + repo.name}).
 						success(function(data, status, headers, config) {
 							scope.currentRepo.statusMap = data;
-							console.log(data);
 							angular.forEach(scope.currentRepo.statusMap, function(fileList, status) {
 								var commitStatus = null;
 								if(status.indexOf('Modified') > -1)
@@ -50,13 +56,6 @@ angular.module('menuModule', [])
 						error(function(data, status, headers, config) {
 						});
 
-
-					$http({method: 'GET', url: '/branch/' + repoName}).
-						success(function(data, status, headers, config) {
-							scope.currentRepo.currentBranchName = data[0];
-						}).
-						error(function(data, status, headers, config) {
-						});
 				};
 
 				scope.showHgIn = function() {

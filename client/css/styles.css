@@ -82,3 +82,12 @@ i.red {
 i.warning {
   color: #ec971f;
 }
+
+.nav-tabs {
+  background-color: #d9edf7;
+  border-radius: 4px;
+}
+
+.nav-tabs li>a{
+  color: #31708f;
+}

@@ -38,7 +38,7 @@ router
 .use(express.static(__dirname + '/client'))
 ;
 
-router.get('/list', function(req, res) {
+router.get('/repositories', function(req, res) {
         var command = "find " + config.repoDir + " -maxdepth 1 -type d";
         var ce = new commandExecutor(command);
         ce.execute(function(stdout) {
@@ -57,6 +57,39 @@ router.get('/list', function(req, res) {
             });
 
             return repoList;
+        }).then(function(consoleObj) {
+            res.json(consoleObj);
+        });
+});
+
+router.get('/repository/branch/:name', function(req, res) {
+        var repoName = req.params.name;
+        var repoDir = config.repoDir + repoName;
+        var command = "hg -R " + repoDir + " branch";
+        var ce = new commandExecutor(command);
+        ce.execute(function(stdout) {
+            var result = {};
+            var infoArray = stdout.replace( /\n/g, "%").split('%');
+            result.name = infoArray[0];
+            return result;
+        }).then(function(consoleObj) {
+            res.json(consoleObj);
+        });
+});
+
+router.get('/repository/log/:name', function(req, res) {
+        var repoName = req.params.name;
+        var repoDir = config.repoDir + repoName;
+        var command = "hg -R " + repoDir + " log -l 1";
+        var ce = new commandExecutor(command);
+        ce.execute(function(stdout) {
+            var infoArray = stdout.replace( /\n/g, "!").split('!');
+            var obj = {};
+            for(var e in infoArray) {
+                var valuePair = infoArray[e].split(": ");
+                obj[valuePair[0]] = valuePair[1];
+            }
+            return obj;
         }).then(function(consoleObj) {
             res.json(consoleObj);
         });
@@ -86,29 +119,18 @@ router.get('/hg/in/:name', function(req, res) {
 router.get('/list/:name', function(req, res) {
         var repoName = req.params.name;
         var repoDir = config.repoDir + repoName;
-        var command = "hg -R " + repoDir + " log -l 1 -v";
+        var command = "hg -R " + repoDir + " log -l 1";
         var ce = new commandExecutor(command);
         ce.execute(function(stdout) {
             var infoArray = stdout.replace( /\n/g, "!").split('!');
+            var list = [];
             var obj = {};
             for(var e in infoArray) {
                 var valuePair = infoArray[e].split(": ");
                 obj[valuePair[0]] = valuePair[1];
             }
-            return obj;
-        }).then(function(consoleObj) {
-            res.json(consoleObj);
-        });
-});
-
-router.get('/branch/:name', function(req, res) {
-        var repoName = req.params.name;
-        var repoDir = config.repoDir + repoName;
-        var command = "hg -R " + repoDir + " branch";
-        var ce = new commandExecutor(command);
-        ce.execute(function(stdout) {
-            var infoArray = stdout.replace( /\n/g, "%").split('%');
-            return infoArray;
+            list.push(obj);
+            return list;
         }).then(function(consoleObj) {
             res.json(consoleObj);
         });
