@@ -20,18 +20,29 @@ angular.module('WebService', [])
 			}
 		};
 
+		var _sendRequest = function(reqData, successCallback, errorCallback) {
+			_goThroughPreFilters(reqData);
+			$http(reqData)
+			.success(function(data, status, headers, config) {
+				if(reqData.ajaxDebug) {
+					reqData.ajaxDebug.command = data.command;
+			    }
+				successCallback(data, status, headers, config);
+			})
+			.error(function(data, status, headers, config) {
+				errorCallback(data, status, headers, config);
+			});	
+		};
 
-		this.getRepositories = function() {
-			var data = {method: 'GET', url: '/repositories'};
-			_goThroughPreFilters(data);
-			return $http(data);
+		this.getRepositories = function(successCallback, errorCallback) {
+			var reqData = {method: 'GET', url: '/repositories'};
+			_sendRequest(reqData, successCallback, errorCallback);
 		};
 
 		// limitation: current branch name only
-		this.getRepositoryBranch = function(name) {
-			var data = {method: 'GET', url: '/repository/branch/' + name};
-			_goThroughPreFilters(data);
-			return $http(data);
+		this.getRepositoryBranch = function(name, successCallback, errorCallback) {
+			var reqData = {method: 'GET', url: '/repository/branch/' + name};
+			_sendRequest(reqData, successCallback, errorCallback);
 		};
 
 		// limitation: latest log of current branch only

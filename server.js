@@ -57,7 +57,8 @@ router.get('/repositories', function(req, res) {
                 }
             });
 
-            return repoList;
+
+            return {result: repoList, command: command};
         }).then(function(consoleObj) {
             res.json(consoleObj);
         });
@@ -73,6 +74,7 @@ router.get('/repository/branch/:name', function(req, res) {
             var result = {};
             var infoArray = stdout.replace( /\n/g, "%").split('%');
             result.name = infoArray[0];
+            result.command = command;
             return result;
         }).then(function(consoleObj) {
             res.json(consoleObj);

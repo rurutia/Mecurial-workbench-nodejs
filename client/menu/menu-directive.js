@@ -7,20 +7,22 @@ angular.module('menuModule', ['WebService'])
 			currentRepo : "="
 		},
 		link: function(scope, elm, attrs) {
-			httpService.getRepositories()
-				.success(function(data, status, headers, config) {
-					scope.repoList = data;
+			httpService.getRepositories(
+				function(data, status, headers, config) {
+					scope.repoList = data.result;
 					angular.forEach(scope.repoList, function(repo){
 						repo.isLoading = false;
 						repo.hasIncomingChange  = false;
-						httpService.getRepositoryBranch(repo.name)
-							.success(function(data) {
+						httpService.getRepositoryBranch(
+							repo.name, 
+							function(data) {
 								repo.branch = data;
-							});
+							}
+						);
 					});
-				}).
-				error(function(data, status, headers, config) {
-				});
+				}
+			);
+
 
 
 				scope.getRepoDetail = function(repo) {
