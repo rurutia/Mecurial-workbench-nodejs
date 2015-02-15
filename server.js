@@ -38,6 +38,7 @@ router
 .use(express.static(__dirname + '/client'))
 ;
 
+
 router.get('/repositories', function(req, res) {
         var command = "find " + config.repoDir + " -maxdepth 1 -type d";
         var ce = new commandExecutor(command);
@@ -62,6 +63,7 @@ router.get('/repositories', function(req, res) {
         });
 });
 
+
 router.get('/repository/branch/:name', function(req, res) {
         var repoName = req.params.name;
         var repoDir = config.repoDir + repoName;
@@ -84,13 +86,41 @@ router.get('/repository/log/:name', function(req, res) {
         var ce = new commandExecutor(command);
         ce.execute(function(stdout) {
             var infoArray = stdout.replace( /\n/g, "!").split('!');
+            var list = [];
             var obj = {};
             for(var e in infoArray) {
                 var valuePair = infoArray[e].split(": ");
                 obj[valuePair[0]] = valuePair[1];
             }
-            return obj;
+            list.push(obj);
+            return list;
         }).then(function(consoleObj) {
+            res.json(consoleObj);
+        });
+});
+
+router.get('/repository/status/:name', function(req, res) {
+        var repoName = req.params.name;
+        var repoDir = config.repoDir + repoName;
+        var command = "hg -R " + repoDir + " status";
+        var ce = new commandExecutor(command);
+        ce.execute(function(stdout) {
+            var infoArray = stdout.replace( /\n/g, "%").split('%');
+            var infoArrayNoBlank = _.filter(infoArray, function(elm) {
+                if(elm && elm.length > 0) {
+                    return true;
+                }
+            });
+
+            var statusCodeFileList = _.mapStatusObject(infoArray, function(elm) {
+                if(elm && elm.length > 0) {
+                    return true;
+                }
+            });
+
+            return statusCodeFileList;
+        }).then(function(consoleObj) {
+            console.log(consoleObj)
             res.json(consoleObj);
         });
 });
@@ -116,51 +146,9 @@ router.get('/hg/in/:name', function(req, res) {
         });
 });
 
-router.get('/list/:name', function(req, res) {
-        var repoName = req.params.name;
-        var repoDir = config.repoDir + repoName;
-        var command = "hg -R " + repoDir + " log -l 1";
-        var ce = new commandExecutor(command);
-        ce.execute(function(stdout) {
-            var infoArray = stdout.replace( /\n/g, "!").split('!');
-            var list = [];
-            var obj = {};
-            for(var e in infoArray) {
-                var valuePair = infoArray[e].split(": ");
-                obj[valuePair[0]] = valuePair[1];
-            }
-            list.push(obj);
-            return list;
-        }).then(function(consoleObj) {
-            res.json(consoleObj);
-        });
-});
 
-router.get('/status/:name', function(req, res) {
-        var repoName = req.params.name;
-        var repoDir = config.repoDir + repoName;
-        var command = "hg -R " + repoDir + " status";
-        var ce = new commandExecutor(command);
-        ce.execute(function(stdout) {
-            var infoArray = stdout.replace( /\n/g, "%").split('%');
-            var infoArrayNoBlank = _.filter(infoArray, function(elm) {
-                if(elm && elm.length > 0) {
-                    return true;
-                }
-            });
 
-            var statusCodeFileList = _.mapStatusObject(infoArray, function(elm) {
-                if(elm && elm.length > 0) {
-                    return true;
-                }
-            });
 
-            return statusCodeFileList;
-        }).then(function(consoleObj) {
-            console.log(consoleObj)
-            res.json(consoleObj);
-        });
-});
 
 router.post('/add/:name', function(req, res) {
         var repoName = req.params.name;

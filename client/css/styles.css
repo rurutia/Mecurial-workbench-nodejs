@@ -11,7 +11,7 @@ i {
 }
 
 .highlight {
-  background-color: #428bca;
+  background-color: #5bc0de;
   color: #fff;
   padding: 2px;
   border-radius: 3px;
@@ -83,9 +83,10 @@ i.warning {
   color: #ec971f;
 }
 
-.nav-tabs {
+.nav-tabs li{
   background-color: #d9edf7;
-  border-radius: 4px;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
 }
 
 .nav-tabs li>a{

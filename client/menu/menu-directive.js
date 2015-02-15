@@ -26,7 +26,7 @@ angular.module('menuModule', ['WebService'])
 				scope.getRepoDetail = function(repo) {
 					scope.currentRepo = repo;
 
-					$http({method: 'GET', url: '/list/' + repo.name}).
+					httpService.getRepositoryLogs(repo.name).
 						success(function(data, status, headers, config) {
 							scope.currentRepo.branch.logs = data;
 						}).
@@ -34,7 +34,7 @@ angular.module('menuModule', ['WebService'])
 						});
 
 
-					$http({method: 'GET', url: '/status/' + repo.name}).
+					httpService.getRepositoryStatus(repo.name).
 						success(function(data, status, headers, config) {
 							scope.currentRepo.statusMap = data;
 							angular.forEach(scope.currentRepo.statusMap, function(fileList, status) {
@@ -58,26 +58,23 @@ angular.module('menuModule', ['WebService'])
 
 				};
 
-				scope.showHgIn = function() {
-					if(scope.repoList) {
-						var flags = {};
-						angular.forEach(scope.repoList, function(repo) {
-							repo.isLoading = true;
-							$http({method: 'GET', url: '/hg/in/' + repo.name}).
-							success(function(data, status, headers, config) {
-								repo.hasIncomingChange = data.hasIncomingChange;
-								if(repo.hasIncomingChange) {
-									repo.info = "has incoming change(s)";
-								}
-								else {
-									repo.info = '';
-								}
-								repo.isLoading = false;
-							}).
-							error(function(data, status, headers, config) {
-							});
+				scope.getSourceChange = function() {
+					angular.forEach(scope.repoList, function(repo) {
+						repo.isLoading = true;
+						$http({method: 'GET', url: '/hg/in/' + repo.name}).
+						success(function(data, status, headers, config) {
+							repo.hasIncomingChange = data.hasIncomingChange;
+							if(repo.hasIncomingChange) {
+								repo.info = "has incoming change(s)";
+							}
+							else {
+								repo.info = '';
+							}
+							repo.isLoading = false;
+						}).
+						error(function(data, status, headers, config) {
 						});
-					}
+					});
 
 				};
 

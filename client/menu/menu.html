@@ -5,7 +5,7 @@
     </a>
       <ul class="list-unstyled collapse in" id="userMenu">
       <li> 
-        <button type="button" class="btn btn-primary btn-xs" ng-click="showHgIn()">check changes</button>
+        <button type="button" class="btn btn-primary btn-xs" ng-click="getSourceChange()">check changes</button>
       </li>
       <li ng-repeat="repo in repoList"> 
         <a href="#" ng-click="getRepoDetail(repo)" title="{{repo.info}}">

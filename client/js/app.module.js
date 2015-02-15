@@ -7,7 +7,8 @@ angular.module('IMMecurialApp', ['ngResource', 'menuModule'])
 			  '/list'
 	  );
   })
-  .controller('mainCtrl', function($scope, RepoList, $http) {
+  .controller('mainCtrl', function($scope, RepoList, $http, $rootScope) {
+  	$rootScope.debug = {ajaxCalls : []};
   	$scope.currentRepo = {};
 
   	$scope.currentRepo.commitMsg = "#Ticket-\n---\nFunctional requirement:\n\n\n---\nSolution:\n\n\n---\nCode notes:";
