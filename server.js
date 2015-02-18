@@ -71,11 +71,8 @@ router.get('/repository/branch/:name', function(req, res) {
         var command = "hg -R " + repoDir + " branch";
         var ce = new commandExecutor(command);
         ce.execute(function(stdout) {
-            var result = {};
             var infoArray = stdout.replace( /\n/g, "%").split('%');
-            result.name = infoArray[0];
-            result.command = command;
-            return result;
+            return {name: infoArray[0], command: command};
         }).then(function(consoleObj) {
             res.json(consoleObj);
         });
@@ -95,7 +92,7 @@ router.get('/repository/log/:name', function(req, res) {
                 obj[valuePair[0]] = valuePair[1];
             }
             list.push(obj);
-            return list;
+            return {result: list, command: command};
         }).then(function(consoleObj) {
             res.json(consoleObj);
         });
@@ -120,9 +117,8 @@ router.get('/repository/status/:name', function(req, res) {
                 }
             });
 
-            return statusCodeFileList;
+            return {result: statusCodeFileList, command: command};
         }).then(function(consoleObj) {
-            console.log(consoleObj)
             res.json(consoleObj);
         });
 });

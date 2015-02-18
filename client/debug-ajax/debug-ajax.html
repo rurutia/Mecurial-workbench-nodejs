@@ -1,0 +1,9 @@
+<div id="debug-info-container" class="alert alert-warning" role="alert">
+  <ul>
+    <li ng-repeat="ajaxCall in debug.ajaxCalls">
+      <strong>{{ajaxCall.time}} <i>{{ajaxCall.method}}: </i>{{ajaxCall.url}}</strong> 
+      <br>
+      {{ajaxCall.command}}    
+    </li>
+  </ul>
+</div>

@@ -9,6 +9,9 @@
 		<link href="./css/bootstrap.min.css" rel="stylesheet">
     <link href="./css/bootstrap-switch.css" rel="stylesheet">
 
+    <!-- chosen js library - https://github.com/harvesthq/chosen -->
+    <link href="./libs/chosen/chosen.min.css" rel="stylesheet">
+
     <link rel="icon" type="image/png" href="/images/hg_icon.png" />
 		<!--[if lt IE 9]>
 			<script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
@@ -51,20 +54,9 @@
 <!-- Main -->
 <div class="container-fluid app-container" ng-controller="mainCtrl">
 
-
-<div id="debug-info-container" class="alert alert-warning" role="alert">
-  <ul>
-    <li ng-repeat="ajaxCall in debug.ajaxCalls">
-      <strong>{{ajaxCall.time}} <i>{{ajaxCall.method}}: </i>{{ajaxCall.url}}</strong> 
-      <br>
-      {{ajaxCall.command}}    
-    </li>
-  </ul>
-</div>
-
+<debug-ajax debug="debug"></debug-ajax>
 
 <div class="row">
-   
     <!-- menu -->
     <div class="col-sm-3">
       <app-menu current-repo="currentRepo"></app-menu>
@@ -276,14 +268,16 @@
 
 <footer class="text-center">Copyright@Infomedix Pty Ltd Developed by Michael Yu 2015. All Rights Reserved</footer>
 
-
   
 	<!-- script references -->
 		<script src="js/jquery-1.11.1.min.js"></script>
 		<script src="js/bootstrap.min.js"></script>
     <script src="js/bootstrap-switch.js"></script>
 
-		<script src="js/scripts.js"></script>
+    <!-- chosen js library - https://github.com/harvesthq/chosen -->
+    <script src="libs/chosen/chosen.jquery.js"></script>
+
+    <script src="js/scripts.js"></script>
 
     <script src="js/angular/angular.js"></script>
     <script src="js/angular/angular-resource.js"></script>
@@ -292,5 +286,8 @@
 
     <script src="shared/web-service.js"></script>
     <script src="menu/menu-directive.js"></script>
+    <script src="debug-ajax/debug-ajax.js"></script>
+
+
 	</body>
 </html>

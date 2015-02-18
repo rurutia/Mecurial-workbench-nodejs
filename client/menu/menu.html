@@ -7,7 +7,12 @@
       <li> 
         <button type="button" class="btn btn-primary btn-xs" ng-click="getSourceChange()">check changes</button>
       </li>
-      <li ng-repeat="repo in repoList"> 
+      <li>
+        <div>
+          <select id='multiselectid' multiple ng-model="visibleRepoNames" data-placeholder="Select Repositories to display" ng-options="repo.name for repo in allRepoList track by repo.name"></select>
+        </div>
+      </li>
+      <li ng-repeat="repo in repoList" ng-show="repo.isVisible"> 
         <a href="#" ng-click="getRepoDetail(repo)" title="{{repo.info}}">
 
           <i ng-show="!repo.isLoading" ng-class="{'glyphicon':true, 'glyphicon-list-alt':true, 'warning':repo.hasIncomingChange}"></i>

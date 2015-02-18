@@ -6,7 +6,7 @@ angular.module('WebService', [])
 		var _debugFilter = function(data) {
 			var newAjaxCall = {url: window.location.origin + data.url, method: data.method};
 			newAjaxCall.time = new Date().toLocaleString();
-            if($rootScope.debug.ajaxCalls.length > 3) {
+            if($rootScope.debug.ajaxCalls.length >= 4) {
             	$rootScope.debug.ajaxCalls.pop();
             }
         	$rootScope.debug.ajaxCalls.unshift(newAjaxCall);
@@ -46,17 +46,15 @@ angular.module('WebService', [])
 		};
 
 		// limitation: latest log of current branch only
-		this.getRepositoryLogs = function(name) {
-			var data = {method: 'GET', url: '/repository/log/' + name};
-			_goThroughPreFilters(data);
-			return $http(data);
+		this.getRepositoryLogs = function(name, successCallback, errorCallback) {
+			var reqData = {method: 'GET', url: '/repository/log/' + name};
+			_sendRequest(reqData, successCallback, errorCallback);
 		};
 
 		// limitation: status of current branch only
-		this.getRepositoryStatus = function(name) {
-			var data = {method: 'GET', url: '/repository/status/' + name};
-			_goThroughPreFilters(data);
-			return $http(data);
+		this.getRepositoryStatus = function(name, successCallback, errorCallback) {
+			var reqData = {method: 'GET', url: '/repository/status/' + name};
+			_sendRequest(reqData, successCallback, errorCallback);
 		};
 
 	};

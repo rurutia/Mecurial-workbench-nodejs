@@ -1,13 +1,14 @@
 'use strict';
 
 // Declare app level module which depends on filters, and services
-angular.module('IMMecurialApp', ['ngResource', 'menuModule'])
+angular.module('IMMecurialApp', ['ngResource', 'menuModule', 'debugAjaxModule'])
   .factory('RepoList', function($resource){
 	  return $resource(
 			  '/list'
 	  );
   })
   .controller('mainCtrl', function($scope, RepoList, $http, $rootScope) {
+  	$scope.user = {};
   	$rootScope.debug = {ajaxCalls : []};
   	$scope.currentRepo = {};
 
