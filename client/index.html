@@ -54,216 +54,18 @@
 <!-- Main -->
 <div class="container-fluid app-container" ng-controller="mainCtrl">
 
-<debug-ajax debug="debug"></debug-ajax>
+  <!-- debug info -->
+  <debug-ajax debug="debug"></debug-ajax>
 
-<div class="row">
-    <!-- menu -->
-    <div class="col-sm-3">
-      <app-menu current-repo="currentRepo"></app-menu>
-    </div><!-- /col-3 -->
-
-    <div class="col-sm-9"  ng-if="currentRepo.name != null">
-
-
-      <div role="tabpanel">
-        <div class="panel panel-info">
-          <div class="panel-heading">
-            Branch: <b style="font-size: 140%"><a target="_blank" href="https://jira.objectconsulting.com.au/browse/{{currentRepo.branch.name}}">{{currentRepo.branch.name}}</a></b> 
-            by <b>{{currentRepo.branch.logs[0].user}}</b> 
-            @ <b>{{currentRepo.branch.logs[0].date}}</b>
-          </div>
-          <div class="panel-body">
-            {{currentRepo.branch.logs[0].summary}}
-          </div>
-        </div>
-
-
-      <!-- tabs -->
-      <ul class="nav nav-tabs" role="tablist">
-        <li role="presentation" class="active"><a href="#status" aria-controls="status" role="tab" data-toggle="tab">Status</a></li>
-        <li role="presentation"><a href="#log" aria-controls="log" role="tab" data-toggle="tab">Log</a></li>
-        <li role="presentation"><a href="#commit" aria-controls="commit" role="tab" data-toggle="tab">Commit</a></li>
-        <li role="presentation"><a href="#shelve" aria-controls="shelve" role="tab" data-toggle="tab">Shelve</a></li>
-        <li role="presentation"><a href="#raw" aria-controls="raw" role="tab" data-toggle="tab">Raw</a></li>
-        <li role="presentation"><a href="#diff-branches" aria-controls="diff-branches" role="tab" data-toggle="tab">Diff branches</a></li>
-      </ul>
-
-      <!-- Tab panes -->
-      <div class="tab-content">
-        <div role="tabpanel" class="tab-pane active" id="status">
-          <div class="row">
-            <div class="col-md-12">
-                  <div class="spacer"></div>
-                  <div class="btn-group">
-                    <button type="button" class="btn btn-primary btn-xs" ng-click="currentStatus = null">show all status</button>
-                    <button type="button" class="btn btn-primary btn-xs dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                      <span class="caret"></span>
-                      <span class="sr-only">Toggle Dropdown</span>
-                    </button>
-                    <ul class="dropdown-menu" role="menu">
-                      <li ng-repeat="(status, files) in currentRepo.statusMap"><a href="#" ng-click="changeCurrentStatus(status)">{{status}}</a></li>
-                    </ul>
-                  </div>
-
-                  <div class="spacer"></div>
-
-                  <ul class="list-group">
-                    <li ng-repeat="(status, files) in currentRepo.statusMap" class="list-group-item"  ng-show="status == currentStatus || !currentStatus">
-                      <div class="row">
-                        <div class="col-md-2">
-                          <div><b>{{status}}</b></div>
-                        </div>
-                        <div class="col-md-6" ng-show="status.indexOf('? -') > -1">
-                          <button type="button" class="btn btn-warning btn-xs" ng-show="status.indexOf('Unknown') > -1" ng-click="add()">add all</button>
-                          <button type="button" class="btn btn-warning btn-xs" ng-click="add(files)">add selected</button>
-                        </div>
-                      </div>
-
-                      <div class="spacer"></div>
-
-                        <ul class="list-unstyled">
-                          <li ng-repeat="file in files">
-                            <input type="checkbox" style="height:15px;width:15px;" ng-model="file.isSelected" ng-click="toggleFileLinkStyle($event)"><a href="#">{{file.name }}</a>
-                          </li>
-                        </ul>
-                    </li>
-                  </ul>
-
-            </div>
-          </div>
-
-        </div>
-
-        <div role="tabpanel" class="tab-pane" id="log">
-          N/A
-        </div>
-
-        <div role="tabpanel" class="tab-pane" id="commit">
-          <form>
-            <div class="form-group">
-            <label for="commitMsg">Message</label>
-              <textarea class="form-control" ng-model="currentRepo.commitMsg" id="commitMsg" placeholder="Enter commit message..." rows="20"></textarea>
-            </div>
-            <button type="button" class="btn btn-warning" ng-click="commit()">Commit!</button>
-          </form>
-
-        </div>
-
-        <div role="tabpanel" class="tab-pane" id="shelve">To be implemented</div>
-
-        <div role="tabpanel" class="tab-pane" id="raw">
-          <div class="row">
-            <div class="col-md-12">
-              <div class="spacer"></div>
-              <form class="form-horizontal">
-                <div class="input-group input-group-lg">
-                  <span class="input-group-addon">
-                  <div ng-show="command.isLoading" ng-class="{'glyphicon-loader-grey':true}"></div> 
-                  hg -R {{currentRepo.name}}
-                  </span>
-                  <input type="text" class="form-control" id="command" placeholder="enter command here..." ng-model="command.text" ng-keydown="issueCommand($event)">
-                  <span class="input-group-btn">
-                    <button type="button" id="issue" class="btn btn-warning" ng-click="issueCommand()">Issue!</button>
-                  </span>
-                </div>
-
-                <div class="spacer"></div>
-
-                <div class="form-group">
-                <label for="result" class="col-sm-1 control-label">Result</label>
-                  <div class="col-sm-10">
-                    <textarea rows="28" id="result" name="result" class="form-control" ng-model="command.result"></textarea>
-                  </div>
-                </div>
-
-              </form>
-            </div>
-          </div>
-        </div>
-
-        <div role="tabpanel" class="tab-pane" id="diff-branches">
-          <div class="row">
-            <div class="col-md-12">
-              <div class="spacer"></div>
-              <form class="form-horizontal">
-
-                <div class="input-group input-group-lg">
-                  <span class="input-group-addon">branch 1</span>
-                  <input type="text" class="form-control" placeholder="branch1..." ng-model="branchDiff.branch1">
-                </div>
-
-
-              </form>
-            </div>
-
-            <div class="col-md-12">
-              <div class="spacer"></div>
-              <form class="form-horizontal">
-
-                <div class="input-group input-group-lg">
-                  <span class="input-group-addon">branch 2</span>
-                  <input type="text" class="form-control" placeholder="branch2..." ng-model="branchDiff.branch2">
-                </div>
-
-
-              </form>
-            </div>
-          </div>
-
-          <div class="spacer"></div>
-
-          <div class="col-md-12">
-            <div ng-show="command.isLoading" ng-class="{'glyphicon-loader-grey':true}"></div> 
-            <button type="button" id="btn-diff-branch" class="btn btn-warning" ng-click="diffBranches()">Start Diff!</button>
-          </div>
-
-          <div class="spacer"></div>
-        
-
-          <div class="col-md-12">
-            <div class="spacer"></div>
-            <div class="dropdown">
-              <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">
-                OrderBy
-                <span class="caret"></span>
-              </button>
-              <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
-              <li role="presentation" ng-repeat="orderBy in ['assignee', 'number', 'description']" ng-click="updateTicketsOrderBy(orderBy)"><a role="menuitem" tabindex="-1" href="#">{{orderBy}}</a></li>
-              </ul>
-            </div>
-          </div>
-
-          <table class="table table-striped">
-            <thead>
-              <tr>
-                <th>#</th>
-                <th style="width: 20%">Ticket number</th>
-                <th style="width: 60%">Description</th>
-                <th>Assignee</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr ng-repeat="ticket in branchDiff.tickets | orderBy: ticketsOrderBy">
-                <td>{{$index + 1}}</th>
-                <td style="width: 20%"><a target="_blank" href="https://jira.objectconsulting.com.au/browse/{{ticket.number}}">{{ticket.number}}</a></td>
-                <td style="width: 20%">{{ticket.description}}</td>
-                <td>{{ticket.assignee}}</td>
-              </tr>
-            </tbody>
-          </table>
-
-        </div>
+  <div class="row">
+      <!-- menu -->
+      <div class="col-sm-3">
+        <app-menu></app-menu>
       </div>
 
-    </div> <!-- end of table panel -->
-
-
-
-
-
-
-    </div>
-</div>
+      <!-- content pane -->
+      <div ui-view></div>
+  </div>
 <!-- /Main -->
 
 <footer class="text-center">Copyright@Infomedix Pty Ltd Developed by Michael Yu 2015. All Rights Reserved</footer>
@@ -286,6 +88,7 @@
 
     <script src="shared/web-service.js"></script>
     <script src="menu/menu-directive.js"></script>
+    <script src="repo/repo.js"></script>
     <script src="debug-ajax/debug-ajax.js"></script>
 
 

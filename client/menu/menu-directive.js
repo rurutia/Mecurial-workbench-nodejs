@@ -1,11 +1,9 @@
 angular.module('menuModule', ['WebService'])
-.directive('appMenu', function($http, $timeout, httpService) {
+.directive('appMenu', function($http, $timeout, httpService, $state) {
 	return {
 		restrict: 'E',
 		templateUrl: 'menu/menu.html',
-		scope: {
-			currentRepo: '='
-		},
+		scope: {},
 		link: function(scope, elm, attrs) {
 			httpService.getRepositories(
 				function(data, status, headers, config) {
@@ -57,39 +55,8 @@ angular.module('menuModule', ['WebService'])
 
 
 			scope.getRepoDetail = function(repo) {
-				scope.currentRepo = repo;
-
-				httpService.getRepositoryLogs(
-					repo.name, 
-					function(data, status, headers, config) {
-						scope.currentRepo.branch.logs = data.result;
-					}
-				);
-
-
-				httpService.getRepositoryStatus(
-					repo.name,
-					function(data, status, headers, config) {
-						scope.currentRepo.statusMap = data.result;
-						angular.forEach(scope.currentRepo.statusMap, function(fileList, status) {
-							var commitStatus = null;
-							if(status.indexOf('Modified') > -1)
-								commitStatus = 'M';
-							else if(status.indexOf('Added') > -1)
-								commitStatus = 'A';
-							else if(status.indexOf('Removed') > -1)
-								commitStatus = 'R';
-
-							if(commitStatus) {
-								angular.forEach(fileList, function(file) {
-									scope.currentRepo.commitMsg += '\n' + commitStatus + ' ' + file.name;
-								});
-							}
-						});
-					}
-				);
-
-
+				// scope.currentRepo = repo;
+				$state.go('repo', {name: repo.name, branchName: repo.branch.name, bar: 'bar'});
 			};
 
 			scope.getSourceChange = function() {
