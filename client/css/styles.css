@@ -17,8 +17,16 @@ i {
   border-radius: 3px;
 }
 
+.bold {
+  font-weight: bold;
+}
+
 .app-container {
   margin-bottom: 50px; /* height of footer */
+}
+
+div#debug-info-container {
+  height: 220px;
 }
 
 /*.nav > li > a {

@@ -7,6 +7,11 @@ angular.module('debugAjaxModule', [])
 		templateUrl: 'debug-ajax/debug-ajax.html',
 		scope: {
 			debug: '='
+		},
+		link: function(scope, elm, attrs) {
+			scope.clear = function() {
+				scope.debug.ajaxCalls = [];
+			}
 		}
 	};
 });

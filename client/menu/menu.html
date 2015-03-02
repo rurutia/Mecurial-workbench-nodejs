@@ -18,7 +18,7 @@
           <i ng-show="!repo.isLoading" ng-class="{'glyphicon':true, 'glyphicon-list-alt':true, 'warning':repo.hasIncomingChange}"></i>
           <div ng-show="repo.isLoading" ng-class="{'glyphicon-loader':true}"></div> 
 
-          <span ng-class="{'btn':currentRepo.name == repo.name, 'btn-info':currentRepo.name == repo.name}">{{repo.name}} ({{repo.branch.name}})</span>
+          <span ng-class="{'bold':currentRepo.name == repo.name}">{{repo.name}} ({{repo.branch.name}})</span>
         </a>
       </li>
       </ul>
