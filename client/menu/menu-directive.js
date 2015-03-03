@@ -49,13 +49,13 @@ angular.module('menuModule', ['WebService'])
 								repo.branch = data;
 							}
 						);
-					});
+					}) ;
 				}
 				);
 
 
 			scope.getRepoDetail = function(repo) {
-				// scope.currentRepo = repo;
+				repo.isCurrent = true;
 				$state.go('repo', {name: repo.name, branchName: repo.branch.name, bar: 'bar'});
 			};
 
