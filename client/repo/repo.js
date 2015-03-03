@@ -1,8 +1,5 @@
 angular.module('repoModule', ['WebService'])
 .controller('repoCtrl', function($scope, $stateParams, RepoList, $http, $rootScope, httpService) {
-	console.log('----------');
-	console.log($stateParams);
-
 	$scope.currentRepo = {branch: {}};
 	
 	$scope.currentRepo.name = $stateParams.name;

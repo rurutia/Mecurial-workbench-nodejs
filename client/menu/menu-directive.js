@@ -56,7 +56,7 @@ angular.module('menuModule', ['WebService'])
 
 			scope.getRepoDetail = function(repo) {
 				repo.isCurrent = true;
-				$state.go('repo', {name: repo.name, branchName: repo.branch.name, bar: 'bar'});
+				$state.go('repo', {name: repo.name, branchName: repo.branch.name, bar: 'bar'}, {reload:true});
 			};
 
 			scope.getSourceChange = function() {
