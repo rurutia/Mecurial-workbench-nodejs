@@ -128,9 +128,9 @@ angular.module('repoModule', ['WebService'])
 
   		$http({method: 'POST', url: '/add/' + $scope.currentRepo.name, data: selectedFiles}).
 	  		success(function(data, status, headers, config) {
-		  		$http({method: 'GET', url: '/status/' + $scope.currentRepo.name}).
+		  		$http({method: 'GET', url: '/repository/status/' + $scope.currentRepo.name}).
 			  		success(function(data, status, headers, config) {
-			  			$scope.currentRepo.statusMap = data;
+			  			$scope.currentRepo.statusMap = data.result;
 			  		}).
 			  		error(function(data, status, headers, config) {
 			  		});
