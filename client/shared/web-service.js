@@ -4,8 +4,13 @@ angular.module('WebService', [])
 .factory('httpService', function($http, $rootScope) {
 	var hgHttp = function() {
 		var _debugFilter = function(data) {
-			var newAjaxCall = {url: window.location.origin + data.url, method: data.method};
-			newAjaxCall.time = new Date().toLocaleString();
+			var newAjaxCall = {
+				url: window.location.origin + data.url, 
+				method: data.method, 
+				data: data.data,
+				time: new Date().toLocaleString()
+			};
+
             if($rootScope.debug.ajaxCalls.length >= 4) {
             	$rootScope.debug.ajaxCalls.pop();
             }
@@ -54,6 +59,11 @@ angular.module('WebService', [])
 		// limitation: status of current branch only
 		this.getRepositoryStatus = function(name, successCallback, errorCallback) {
 			var reqData = {method: 'GET', url: '/repository/status/' + name};
+			_sendRequest(reqData, successCallback, errorCallback);
+		};
+
+		this.addFiles = function(name, files, successCallback, errorCallback) {
+			var reqData = {method: 'POST', url: '/add/' + name, data: files};
 			_sendRequest(reqData, successCallback, errorCallback);
 		};
 

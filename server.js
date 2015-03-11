@@ -57,7 +57,6 @@ router.get('/repositories', function(req, res) {
                 }
             });
 
-
             return {result: repoList, command: command};
         }).then(function(consoleObj) {
             res.json(consoleObj);
@@ -145,9 +144,6 @@ router.get('/hg/in/:name', function(req, res) {
 });
 
 
-
-
-
 router.post('/add/:name', function(req, res) {
         var repoName = req.params.name;
         var repoDir = config.repoDir + repoName;
@@ -160,8 +156,8 @@ router.post('/add/:name', function(req, res) {
         }
         var ce = new commandExecutor(command);
         ce.execute(function(stdout) {
-            var infoArray = stdout.replace( /\n/g, "%").split('%');
-            return infoArray;
+            var infoArray = stdout.replace(/\n/g, "%").split('%');
+            return {result: infoArray, command: command};
         }).then(function(consoleObj) {
             res.json(consoleObj);
         });

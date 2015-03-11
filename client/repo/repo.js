@@ -1,11 +1,12 @@
 angular.module('repoModule', ['WebService'])
 .controller('repoCtrl', function($scope, $stateParams, RepoList, $http, $rootScope, httpService) {
-	$scope.currentRepo = {branch: {}};
+	$scope.currentRepo = {
+		branch: {
+			name: $stateParams.branchName
+		},
+		name: $stateParams.name
+	};
 	
-	$scope.currentRepo.name = $stateParams.name;
-
-	$scope.currentRepo.branch.name = $stateParams.branchName;
-
   	$scope.currentRepo.commitMsg = "#Ticket-\n---\nFunctional requirement:\n\n\n---\nSolution:\n\n\n---\nCode notes:";
 
   	$scope.fileList = [];
@@ -125,18 +126,19 @@ angular.module('repoModule', ['WebService'])
 	  			return false;
   		}
 
-
-  		$http({method: 'POST', url: '/add/' + $scope.currentRepo.name, data: selectedFiles}).
-	  		success(function(data, status, headers, config) {
-		  		$http({method: 'GET', url: '/repository/status/' + $scope.currentRepo.name}).
-			  		success(function(data, status, headers, config) {
+  		httpService.addFiles(
+  			$scope.currentRepo.name, 
+  			Array.prototype.slice.call(selectedFiles),
+  			function(data, status, headers, config) {
+  				httpService.getRepositoryStatus(
+  					$scope.currentRepo.name, 
+  					function(data, status, headers, config) {
 			  			$scope.currentRepo.statusMap = data.result;
-			  		}).
-			  		error(function(data, status, headers, config) {
-			  		});
-		  	}).
-	  		error(function(data, status, headers, config) {
-	  		});  		
+			  		}
+  				);
+		  	}
+  		);
+
   	};
 
   	$scope.changeCurrentStatus = function(status) {

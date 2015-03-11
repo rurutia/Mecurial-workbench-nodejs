@@ -4,7 +4,11 @@
   </div>
   <ul>
     <li ng-repeat="ajaxCall in debug.ajaxCalls">
-      <strong>{{ajaxCall.time}} <i>{{ajaxCall.method}}: </i>{{ajaxCall.url}}</strong> 
+      {{ajaxCall.time}} 
+      <strong>
+      	<i>{{ajaxCall.method}}: </i>{{ajaxCall.url}} 
+      </strong> 
+      <span ng-show="ajaxCall.data"><i>Data</i>: <strong>{{ajaxCall.data | json}}</strong></span>
       <br>
       {{ajaxCall.command}}    
     </li>
