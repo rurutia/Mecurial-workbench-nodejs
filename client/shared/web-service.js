@@ -67,6 +67,16 @@ angular.module('WebService', [])
 			_sendRequest(reqData, successCallback, errorCallback);
 		};
 
+		this.forgetFiles = function(name, files, successCallback, errorCallback) {
+			var reqData = {method: 'POST', url: '/forget/' + name, data: files};
+			_sendRequest(reqData, successCallback, errorCallback);
+		};
+
+		this.revertFiles = function(name, files, successCallback, errorCallback) {
+			var reqData = {method: 'POST', url: '/revert/' + name, data: files};
+			_sendRequest(reqData, successCallback, errorCallback);
+		};
+
 	};
 
 	return new hgHttp();

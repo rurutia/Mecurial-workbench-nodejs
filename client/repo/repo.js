@@ -51,7 +51,7 @@ angular.module('repoModule', ['WebService'])
 
 
   	$scope.toggleFileLinkStyle = function(e) {
-  		$(e.target).parent().find('a').toggleClass("highlight");
+  		$(e.target).parent().find('a').toggleClass("bold");
   	};
 
   	$scope.commit = function() {
@@ -112,34 +112,61 @@ angular.module('repoModule', ['WebService'])
 		  		});  		
   	};
 
-  	
+    $scope.action = function(action, status, isAll) {
+      var files = $scope.currentRepo.statusMap[status];
 
-  	$scope.add = function(files) {
-  		var selectedFiles = [];
-  		if(files){
-	  		selectedFiles = $(files).filter(function(i, file) {
-	  			if(file.isSelected) {
-	  				return file;
-	  			}
-	  		}); 
-	  		if(selectedFiles.length == 0)
-	  			return false;
-  		}
+      var selectedFiles = [];
+      if(isAll){
+        selectedFiles = files;
+      }
+      else {
+        selectedFiles = $(files).filter(function(i, file) {
+          if(file.isSelected) {
+            return file;
+          }
+        }); 
+        if(selectedFiles.length == 0)
+          return false;        
+      }
 
-  		httpService.addFiles(
-  			$scope.currentRepo.name, 
-  			Array.prototype.slice.call(selectedFiles),
-  			function(data, status, headers, config) {
-  				httpService.getRepositoryStatus(
-  					$scope.currentRepo.name, 
-  					function(data, status, headers, config) {
-			  			$scope.currentRepo.statusMap = data.result;
-			  		}
-  				);
-		  	}
-  		);
+      var successCallback = function(data, status, headers, config) {
+        httpService.getRepositoryStatus(
+          $scope.currentRepo.name, 
+          function(data, status, headers, config) {
+            $scope.currentRepo.statusMap = data.result;
+          }
+        );
+      };
 
-  	};
+      switch(action) {
+        case 'add':
+          httpService.addFiles(
+            $scope.currentRepo.name, 
+            Array.prototype.slice.call(selectedFiles),
+            successCallback
+          );
+          break;
+
+        case 'forget':
+          httpService.forgetFiles(
+            $scope.currentRepo.name, 
+            Array.prototype.slice.call(selectedFiles),
+            successCallback
+          );
+          break;
+
+        case 'revert':
+          httpService.revertFiles(
+            $scope.currentRepo.name, 
+            Array.prototype.slice.call(selectedFiles),
+            successCallback
+          );
+          break;
+      }
+
+
+
+    };
 
   	$scope.changeCurrentStatus = function(status) {
   		$scope.currentStatus = status;

@@ -180,6 +180,24 @@ router.post('/forget/:name', function(req, res) {
         });
 });
 
+router.post('/revert/:name', function(req, res) {
+        var repoName = req.params.name;
+        var repoDir = config.repoDir + repoName;
+
+        var command = "hg -R " + repoDir + " revert";
+        var files = Array.prototype.slice.call(req.body);
+        for(var i in files) {
+            var file = files[i]['name'];
+            command += " " + repoDir + "/" + file;
+        }
+        var ce = new commandExecutor(command);
+        ce.execute(function(stdout) {
+            return {command: command};
+        }).then(function(consoleObj) {
+            res.json(consoleObj);
+        });
+});
+
 router.post('/raw/:name', function(req, res) {
         var repoName = req.params.name;
         var repoDir = config.repoDir + repoName;
