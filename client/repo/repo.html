@@ -47,10 +47,19 @@
 	                    <div class="col-md-2">
 	                      <div><b>{{status}}</b></div>
 	                    </div>
-	                    <div class="col-md-6" ng-show="status.indexOf('? -') > -1">
+
+	                    <!-- possible operations for different status -->
+	                    <div class="col-md-6" ng-show="status.indexOf('? - Unknown') > -1">
+	                      <button type="button" class="btn btn-warning btn-xs" ng-click="add()">add all</button>
+	                      <button type="button" class="btn btn-warning btn-xs" ng-click="add(files)">add selected</button>
+	                    </div>
+
+	                    <div class="col-md-6" ng-show="status.indexOf('A - Added') > -1">
 	                      <button type="button" class="btn btn-warning btn-xs" ng-show="status.indexOf('Unknown') > -1" ng-click="add()">add all</button>
 	                      <button type="button" class="btn btn-warning btn-xs" ng-click="add(files)">add selected</button>
 	                    </div>
+
+
 	                  </div>
 
 	                  <div class="spacer"></div>

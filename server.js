@@ -156,8 +156,25 @@ router.post('/add/:name', function(req, res) {
         }
         var ce = new commandExecutor(command);
         ce.execute(function(stdout) {
-            var infoArray = stdout.replace(/\n/g, "%").split('%');
-            return {result: infoArray, command: command};
+            return {command: command};
+        }).then(function(consoleObj) {
+            res.json(consoleObj);
+        });
+});
+
+router.post('/forget/:name', function(req, res) {
+        var repoName = req.params.name;
+        var repoDir = config.repoDir + repoName;
+
+        var command = "hg -R " + repoDir + " forget";
+        var files = Array.prototype.slice.call(req.body);
+        for(var i in files) {
+            var file = files[i]['name'];
+            command += " " + repoDir + "/" + file;
+        }
+        var ce = new commandExecutor(command);
+        ce.execute(function(stdout) {
+            return {command: command};
         }).then(function(consoleObj) {
             res.json(consoleObj);
         });
