@@ -59,7 +59,7 @@
 	                      <button type="button" class="btn btn-success btn-xs" ng-click="action('forget', status)">forget selected</button>
 	                    </div>
 
-	                    <div class="col-md-6" ng-show="status.indexOf('M - Modified') > -1">
+	                    <div class="col-md-6" ng-show="status.indexOf('M - Modified') > -1 || status.indexOf('! - Deleted') > -1">
 	                      <button type="button" class="btn btn-success btn-xs" ng-click="action('revert', status, true)">revert all</button>
 	                      <button type="button" class="btn btn-success btn-xs" ng-click="action('revert', status)">revert selected</button>
 	                    </div>
