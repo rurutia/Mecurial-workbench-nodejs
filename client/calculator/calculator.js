@@ -9,15 +9,27 @@ angular.module('calculator', [])
 	$scope.exchangeRate = 5.0;
   $scope.deliveryRate = 10.0;
 
-  $scope.$watch('items', function(newVal, oldVal) {
+  var calculateTotal = function() {
     $scope.total.purchaseCost = $scope.total.deliveryCost = $scope.total.sellPrice = 0.0;
     var totalWeight = 0;
     angular.forEach($scope.items, function(item) {
       $scope.total.purchaseCost += parseFloat(item.costAud * item.quantity * $scope.exchangeRate);
-      totalWeight += parseInt(item.weight);
+      totalWeight += parseInt(item.weight * item.quantity );
       $scope.total.sellPrice += parseFloat(item.sellCny * item.quantity);
     });
     $scope.total.deliveryCost = Math.ceil(totalWeight/1000.0) * $scope.deliveryRate * $scope.exchangeRate;
+  };
+
+  $scope.$watch('items', function(newVal, oldVal) {
+    calculateTotal();
+  }, true);
+
+  $scope.$watch('exchangeRate', function(newVal, oldVal) {
+    calculateTotal();
+  }, true);
+
+  $scope.$watch('deliveryRate', function(newVal, oldVal) {
+    calculateTotal();
   }, true);
 
 	$scope.addItem = function() {
