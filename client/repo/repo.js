@@ -1,19 +1,27 @@
 angular.module('repoModule', ['WebService'])
-.controller('repoCtrl', function($scope, $stateParams, RepoList, $http, $rootScope, httpService) {
+.controller('repoCtrl', function($scope, $stateParams, RepoList, $http, $rootScope, httpService, initConfig) {
 	$scope.currentRepo = {
 		branch: {
 			name: $stateParams.branchName
 		},
 		name: $stateParams.name
 	};
-	
-  	$scope.currentRepo.commitMsg = "#Ticket-\n---\nFunctional requirement:\n\n\n---\nSolution:\n\n\n---\nCode notes:";
+
+            $scope.$watch('currentRepo.statusMap', function(newVal, oldVal) {
+               // alert('hey, $scope.currentRepo.statusMap has changed!');
+               console.log(newVal);
+               console.log(oldVal);
+               delete $scope.currentRepo.commitMsg;
+             });
+
+  $scope.commitTemplates = initConfig.commitTemplates;
 
   	$scope.fileList = [];
   	$scope.command = {};
   	$scope.branchDiff = {};
 
   	$scope.ticketsOrderBy = 'number';
+
 
   	httpService.getRepositoryLogs(
   		$scope.currentRepo.name, 
@@ -27,23 +35,8 @@ angular.module('repoModule', ['WebService'])
   		$scope.currentRepo.name,
   		function(data, status, headers, config) {
   			$scope.currentRepo.statusMap = data.result;
-  			angular.forEach($scope.currentRepo.statusMap, function(fileList, status) {
-  				var commitStatus = null;
-  				if(status.indexOf('Modified') > -1)
-  					commitStatus = 'M';
-  				else if(status.indexOf('Added') > -1)
-  					commitStatus = 'A';
-  				else if(status.indexOf('Removed') > -1)
-  					commitStatus = 'R';
-
-  				if(commitStatus) {
-  					angular.forEach(fileList, function(file) {
-  						$scope.currentRepo.commitMsg += '\n' + commitStatus + ' ' + file.name;
-  					});
-  				}
-  			});
   		}
-  		);
+  	);
 
   	$scope.updateTicketsOrderBy = function(orderBy) {
   		$scope.ticketsOrderBy = orderBy;
@@ -111,6 +104,25 @@ angular.module('repoModule', ['WebService'])
 		  		error(function(data, status, headers, config) {
 		  		});  		
   	};
+
+    $scope.updateCommitMsg = function() {
+        angular.forEach($scope.currentRepo.statusMap, function(fileList, status) {
+          var commitStatus = null;
+          if(status.indexOf('Modified') > -1)
+            commitStatus = 'M';
+          else if(status.indexOf('Added') > -1)
+            commitStatus = 'A';
+          else if(status.indexOf('Removed') > -1)
+            commitStatus = 'R';
+
+          if(commitStatus) {
+            angular.forEach(fileList, function(file) {
+              // $scope.currentRepo.commitMsg += '\n' + commitStatus + ' 'K + file.name;
+              $scope.currentRepo.commitMsg += '\n' + commitStatus + ' ' + file.name;
+            });
+          }
+        });
+    };
 
     $scope.action = function(action, status, isAll) {
       var files = $scope.currentRepo.statusMap[status];

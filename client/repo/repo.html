@@ -88,10 +88,16 @@
 	    </div>
 
 	    <div role="tabpanel" class="tab-pane" id="commit">
+	      <div class="spacer"></div>
 	      <form>
 	        <div class="form-group">
-	        <label for="commitMsg">Message</label>
-	          <textarea class="form-control" ng-model="currentRepo.commitMsg" id="commitMsg" placeholder="Enter commit message..." rows="20"></textarea>
+	        	<select ng-options="template.content as template.name for template in commitTemplates" ng-model="currentRepo.commitMsg" ng-change="updateCommitMsg()">
+	        		<option value="">Choose a template:</option>
+	        	</select>
+        	</div>
+        	<div class="form-group">
+		        <label for="commitMsg">Message</label>
+		          <textarea class="form-control" ng-model="currentRepo.commitMsg" id="commitMsg" placeholder="Enter commit message..." rows="20"></textarea>
 	        </div>
 	        <button type="button" class="btn btn-warning" ng-click="commit()">Commit!</button>
 	      </form>

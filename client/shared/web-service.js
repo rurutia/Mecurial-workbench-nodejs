@@ -11,10 +11,12 @@ angular.module('WebService', [])
 				time: new Date().toLocaleString()
 			};
 
-            if($rootScope.debug.ajaxCalls.length >= 4) {
-            	$rootScope.debug.ajaxCalls.pop();
-            }
-        	$rootScope.debug.ajaxCalls.unshift(newAjaxCall);
+			if($rootScope.debug) {
+	            if($rootScope.debug.ajaxCalls.length >= 4) {
+	            	$rootScope.debug.ajaxCalls.pop();
+	            }
+	        	$rootScope.debug.ajaxCalls.unshift(newAjaxCall);
+			}
 
         	data.ajaxDebug = newAjaxCall;
 		};
@@ -74,6 +76,11 @@ angular.module('WebService', [])
 
 		this.revertFiles = function(name, files, successCallback, errorCallback) {
 			var reqData = {method: 'POST', url: '/revert/' + name, data: files};
+			_sendRequest(reqData, successCallback, errorCallback);
+		};
+
+		this.getSystemConfig = function(name, successCallback, errorCallback) {
+			var reqData = {method: 'GET', url: '/config/' + name};
 			_sendRequest(reqData, successCallback, errorCallback);
 		};
 

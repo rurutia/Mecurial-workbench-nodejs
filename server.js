@@ -3,11 +3,15 @@ var fs = require('fs');
 var path = require('path');
 var util = require('util');
 
+
 var config = require('./config.json');
+
 var _ = require('./app/utility/myu-underscore.js');
 var commandExecutor = require('./app/command-executor.js');
 
-// server.js
+// load system configuration and resources
+var configuror = require('./app/configuror.js');
+configuror.initConfig();
 
 // BASE SETUP
 // =============================================================================
@@ -196,6 +200,11 @@ router.post('/revert/:name', function(req, res) {
         }).then(function(consoleObj) {
             res.json(consoleObj);
         });
+});
+
+router.get('/config/:name', function(req, res) {
+        var configName = req.params.name;
+        res.json(configuror[configName]);
 });
 
 router.post('/raw/:name', function(req, res) {
