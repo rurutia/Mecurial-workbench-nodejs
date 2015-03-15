@@ -1,0 +1,62 @@
+<div class="col-sm-9" ng-controller="calculatorCtrl">
+	<div class="row">
+		<div class="col-sm-2">
+			<button type="button" class="btn btn-primary" ng-click="addItem()">Add item</button>
+		</div>
+		<div class="col-sm-2">
+			<label>exchange rate:</label>
+			<input ng-model="exchangeRate" />
+		</div>
+	</div>
+	<div class="row">
+		<table class="table table-striped">
+			<thead>
+				<tr>
+					<th>#</th>
+					<th>Description</th>
+					<th>Quantity</th>
+					<th>Cost($)</th>
+					<th>Cost(RMB)</th>
+					<th>Sell(RMB)</th>
+					<th>Weight(g)</th>
+					<th>Action</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-repeat="item in items">
+					<td>{{$index + 1}}</td>
+
+					<td ng-if="!item.editable">{{item.description}}</td>
+					<td ng-if="item.editable"><input ng-model="item.description"></input></td>
+
+					<td ng-if="!item.editable">{{item.quantity}}</td>
+					<td ng-if="item.editable"><input ng-model="item.copy.quantity"></input></td>
+
+					<td ng-if="!item.editable">{{item.priceAud}}</td>
+					<td ng-if="item.editable"><input ng-model="item.copy.priceAud"></input></td>
+
+					<td>{{item.priceAud * exchangeRate | number : 2}}</td>
+
+					<td ng-if="!item.editable">{{item.sellRmb}}</td>
+					<td ng-if="item.editable"><input ng-model="item.copy.sellRmb"></input></td>
+
+
+					<td ng-if="!item.editable">{{item.weight}}</td>
+					<td ng-if="item.editable"><input ng-model="item.copy.weight"></input></td>
+
+					<td>
+						<button type="button" class="btn btn-primary" ng-click="editItem(item)" ng-show="!item.editable">Edit</button>
+						<button type="button" class="btn btn-primary" ng-click="saveItem(item)" ng-show="item.editable">Save</button>
+						<button type="button" class="btn btn-primary" ng-click="cancelEditItem(item)" ng-show="item.editable">Cancel</button>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+
+	<div class="row">
+		<div class="col-sm-2">
+			Total cost: {{calculateTotal()}}
+		</div>
+	</div>
+</div>

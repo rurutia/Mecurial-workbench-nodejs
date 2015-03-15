@@ -1,7 +1,7 @@
 'use strict';
 
 // Declare app level module which depends on filters, and services
-angular.module('IMMecurialApp', ['ui.router', 'ngResource', 'menuModule', 'repoModule', 'debugAjaxModule'])
+angular.module('IMMecurialApp', ['ui.router', 'ngResource', 'menuModule', 'repoModule', 'debugAjaxModule', 'calculator'])
   .config(function($stateProvider, $urlRouterProvider) {
     // @TODO For any unmatched url, redirect to /state1
   	// $urlRouterProvider.otherwise("/state1");	
@@ -9,7 +9,13 @@ angular.module('IMMecurialApp', ['ui.router', 'ngResource', 'menuModule', 'repoM
 	    .state('repo', {
 	      url: "/repo/:name?branchName&bar",
 	      templateUrl: "repo/repo.html"
-	    });
+	    })
+	    .state('calculator', {
+	      url: "/calculator",
+	      templateUrl: "calculator/calculator.html"
+	    })
+
+	    ;
 
   })
   .factory('RepoList', function($resource){
