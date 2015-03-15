@@ -1,0 +1,95 @@
+<div class="col-sm-9" ng-controller="calculatorCtrl">
+	<div class="row">
+		<div class="col-sm-2">
+			<button type="button" class="btn btn-primary" ng-click="addItem()">Add item</button>
+		</div>
+		<div class="col-sm-2">
+			<label>exchange rate:</label>
+			<input ng-model="exchangeRate" />
+		</div>
+		<div class="col-sm-2">
+			<label>delivery charge per KG:</label>
+			<input ng-model="deliveryRate" />
+		</div>
+	</div>
+	<div class="row">
+		<table class="table table-striped">
+			<thead>
+				<tr>
+					<th>#</th>
+					<th>Description</th>
+					<th>Quantity</th>
+					<th>Cost($)</th>
+					<th>Cost(￥)</th>
+					<th>Sell(￥)</th>
+					<th>Weight(gram)</th>
+					<th>Action</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-repeat="item in items">
+					<td>{{$index + 1}}</td>
+
+					<td ng-if="!item.editable">{{item.description}}</td>
+					<td ng-if="item.editable"><input ng-model="item.description"></input></td>
+
+					<td ng-if="!item.editable">{{item.quantity}}</td>
+					<td ng-if="item.editable"><input ng-model="item.copy.quantity"></input></td>
+
+					<td ng-if="!item.editable">{{item.costAud | number : 2}}</td>
+					<td ng-if="item.editable"><input ng-model="item.copy.costAud"></input></td>
+
+					<td ng-if="!item.editable">{{item.costAud * exchangeRate | number : 2}}</td>
+					<td ng-if="item.editable">{{item.copy.costAud * exchangeRate | number : 2}}</input></td>
+
+					<td ng-if="!item.editable">{{item.sellCny | number : 2}}</td>
+					<td ng-if="item.editable"><input ng-model="item.copy.sellCny"></input></td>
+
+
+					<td ng-if="!item.editable">{{item.weight}}</td>
+					<td ng-if="item.editable"><input ng-model="item.copy.weight"></input></td>
+
+					<td>
+						<button type="button" class="btn btn-primary" ng-click="editItem(item)" ng-show="!item.editable">Edit</button>
+						<button type="button" class="btn btn-danger" ng-click="deleteItem(item, $index)" ng-show="!item.editable">Delete</button>
+						<button type="button" class="btn btn-primary" ng-click="saveItem(item)" ng-show="item.editable">Save</button>
+						<button type="button" class="btn btn-primary" ng-click="cancelEditItem(item)" ng-show="item.editable">Cancel</button>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+
+
+	<div class="row">
+	 <div class="col-sm-6">
+		<table class="table table-striped">
+			<thead>
+				<tr>
+					<th style="width:15%">Total sell(￥)</th>
+					<th></th>
+					<th>Purchase cost(￥)</th>
+					<th></th>
+					<th>Delivery charge(￥)</th>
+					<th></th>
+					<th>Margin(￥)</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td style="width:15%">{{total.sellPrice | number : 2}}</td>
+					<td><div style="border-top:2px solid black;margin-top:100%"></div></td>
+					<td>{{total.purchaseCost | number : 2}}</td>
+					<td><div style="border-top:2px solid black;margin-top:100%"></div></td>
+					<td>{{total.deliveryCost | number : 2}} </td>
+					<td><div style="border-top:2px solid black;border-bottom:2px solid black;margin-top:100%;height:5px"></div></td>
+					<td>{{total.sellPrice - total.purchaseCost - total.deliveryCost | number : 2}}</td>
+				</tr>
+			</tbody>
+		</table>
+		</div>
+	</div>
+
+
+
+</div>
