@@ -122,3 +122,8 @@ i.warning {
     border-radius: 3px;
   }
 }
+
+/* taobao calculator */
+#calculator-table input {
+  width: 80px;
+}

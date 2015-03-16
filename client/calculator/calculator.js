@@ -36,22 +36,27 @@ angular.module('calculator', [])
 		$scope.items.push({editable: true});
 	};
 
+  $scope.deleteAllItem = function() {
+    $scope.items = [];
+  };
+
 
   $scope.editItem = function(item) {
       item.editable = true;
       item.copy = {};
       angular.copy(item, item.copy);
-    };
+  };
 
   $scope.deleteItem = function(item, index) {
     // alert(index);
     $scope.items.splice(index, 1);
   };
 
-  	$scope.saveItem = function(item) {
-  		angular.copy(item.copy, item);
-  		item.editable = false;
-  	};
+	$scope.saveItem = function(item) {
+		angular.copy(item.copy, item);
+    console.log(item.copy);
+		item.editable = false;
+	};
 
 	$scope.cancelEditItem = function(item) {
   		item.editable = false;
