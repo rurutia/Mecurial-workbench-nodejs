@@ -7,12 +7,9 @@ angular.module('repoModule', ['WebService'])
 		name: $stateParams.name
 	};
 
-            $scope.$watch('currentRepo.statusMap', function(newVal, oldVal) {
-               // alert('hey, $scope.currentRepo.statusMap has changed!');
-               console.log(newVal);
-               console.log(oldVal);
-               delete $scope.currentRepo.commitMsg;
-             });
+  $scope.$watch('currentRepo.statusMap', function(newVal, oldVal) {
+     delete $scope.currentRepo.commitMsg;
+  });
 
   $scope.commitTemplates = initConfig.commitTemplates;
 
@@ -107,6 +104,25 @@ angular.module('repoModule', ['WebService'])
 
     $scope.updateCommitMsg = function() {
         angular.forEach($scope.currentRepo.statusMap, function(fileList, status) {
+
+          // replace placeholders in commit template with data defined in 'msgReplaceMap'
+          var msgReplaceMap = {
+            ticketNumber: $scope.currentRepo.branch.name,
+            ticketContent: 'to be implemented by calling JIRA REST at backend'
+          };
+
+          // pattern for placeholders in form of '@{placeholder}'
+          var placeholderPatt = /@\{(\w+)\}/m;
+          var match;
+
+          // loop through all placeholders in template and replace them with data in 'msgReplaceMap'
+          do {
+            match = placeholderPatt.exec($scope.currentRepo.commitMsg);
+            if (match) {
+              $scope.currentRepo.commitMsg = $scope.currentRepo.commitMsg.replace(new RegExp('@\{' + match[1] + '\}', 'gm'), msgReplaceMap[match[1]]); 
+            }
+          } while(match);
+
           var commitStatus = null;
           if(status.indexOf('Modified') > -1)
             commitStatus = 'M';
@@ -117,7 +133,6 @@ angular.module('repoModule', ['WebService'])
 
           if(commitStatus) {
             angular.forEach(fileList, function(file) {
-              // $scope.currentRepo.commitMsg += '\n' + commitStatus + ' 'K + file.name;
               $scope.currentRepo.commitMsg += '\n' + commitStatus + ' ' + file.name;
             });
           }
