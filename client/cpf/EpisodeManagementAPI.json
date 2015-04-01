@@ -1,0 +1,59 @@
+{
+	"id": "22ad4d84-04af-64ec-b2ba-6a9d2252dccc",
+	"name": "Episode Management API (3.3)",
+	"description": "",
+	"order": [
+		"a014749b-585d-66c0-4763-9e296070c689"
+	],
+	"folders": [],
+	"timestamp": 1423108287369,
+	"synced": false,
+	"remoteLink": "",
+	"requests": [
+		{
+			"id": "a014749b-585d-66c0-4763-9e296070c689",
+			"headers": "Authorization: Basic c3lzdGVtOk0wMG5iMHk=\n",
+			"url": "http://10.64.33.101:8080/epmgtapi/episode/IHN:919191/create.json",
+			"preRequestScript": "",
+			"pathVariables": {},
+			"method": "POST",
+			"data": [
+				{
+					"key": "type",
+					"value": "I",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "state",
+					"value": "G",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "startdate",
+					"value": "20140505",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "financialClass",
+					"value": "fcs",
+					"type": "text",
+					"enabled": true
+				}
+			],
+			"dataMode": "urlencoded",
+			"version": 2,
+			"tests": "",
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1423189973464,
+			"name": "CreateEpisode",
+			"description": "",
+			"collectionId": "22ad4d84-04af-64ec-b2ba-6a9d2252dccc",
+			"responses": [],
+			"synced": false
+		}
+	]
+}

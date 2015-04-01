@@ -1,0 +1,541 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wadl:application xmlns:wadl="http://wadl.dev.java.net/2009/02" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <wadl:doc xmlns:enunciate="http://enunciate.codehaus.org/" enunciate:generatedBy="Enunciate-1.27"/>
+  <wadl:grammars>
+    <wadl:include href="ns0.xsd"/>
+  </wadl:grammars>
+  <wadl:resources base="http://localhost:8080/PatientFolderAPI">
+    <wadl:resource path="/rest/patientlist">
+      <wadl:method name="POST">
+        <wadl:doc>
+          <![CDATA[Given colon separated namespace:urno pairs, add those patients to current user's my patient list.]]>
+        </wadl:doc>
+        <wadl:request/>
+        <wadl:response>
+          <wadl:doc>
+            <![CDATA[list of patients added]]>
+          </wadl:doc>
+          <wadl:representation mediaType="application/xml" element="results"/>
+          <wadl:representation mediaType="text/vnd.infomedix+xml" element="results"/>
+          <wadl:representation mediaType="text/xml" element="results"/>
+          <wadl:representation mediaType="application/vnd.infomedix+json"/>
+          <wadl:representation mediaType="application/json"/>
+          <wadl:representation mediaType="application/vnd.infomedix+xml" element="results"/>
+        </wadl:response>
+      </wadl:method>
+      <wadl:method name="DELETE">
+        <wadl:doc>
+          <![CDATA[Given colon separated namespace:urno pairs, delete those patients from current user's my patient list.]]>
+        </wadl:doc>
+        <wadl:request>
+          <wadl:param name="nsUrnos" style="query"/>
+        </wadl:request>
+      </wadl:method>
+    </wadl:resource>
+    <wadl:resource path="/rest/activityfeed/{patientns}:{patientid}">
+      <wadl:param name="patientns" style="template"/>
+      <wadl:param name="patientid" style="template"/>
+      <wadl:method name="GET">
+        <wadl:request>
+          <wadl:param name="limit" style="query"/>
+        </wadl:request>
+        <wadl:response>
+          <wadl:representation mediaType="application/xml" element="Feeds"/>
+          <wadl:representation mediaType="text/vnd.infomedix+xml" element="Feeds"/>
+          <wadl:representation mediaType="text/xml" element="Feeds"/>
+          <wadl:representation mediaType="application/vnd.infomedix+json"/>
+          <wadl:representation mediaType="application/json"/>
+          <wadl:representation mediaType="application/vnd.infomedix+xml" element="Feeds"/>
+        </wadl:response>
+      </wadl:method>
+    </wadl:resource>
+    <wadl:resource path="/rest/patient/{patientNs}:{patientId}">
+      <wadl:param name="patientNs" style="template">
+        <wadl:doc>
+          <![CDATA[The namespace of the patient URNO. Must use together with patientId]]>
+        </wadl:doc>
+      </wadl:param>
+      <wadl:param name="patientId" style="template">
+        <wadl:doc>
+          <![CDATA[The patient URNO. Must use together with patientNs]]>
+        </wadl:doc>
+      </wadl:param>
+      <wadl:method name="GET">
+        <wadl:request/>
+        <wadl:response>
+          <wadl:doc>
+            <![CDATA[return patientDTO with specified patientNs and patientId]]>
+          </wadl:doc>
+          <wadl:representation mediaType="application/xml" element="Patient"/>
+          <wadl:representation mediaType="text/vnd.infomedix+xml" element="Patient"/>
+          <wadl:representation mediaType="text/xml" element="Patient"/>
+          <wadl:representation mediaType="application/vnd.infomedix+json"/>
+          <wadl:representation mediaType="application/json"/>
+          <wadl:representation mediaType="application/vnd.infomedix+xml" element="Patient"/>
+        </wadl:response>
+      </wadl:method>
+    </wadl:resource>
+    <wadl:resource path="/rest/patientlist/Outpatients">
+      <wadl:method name="GET">
+        <wadl:request>
+          <wadl:param name="start" style="query"/>
+          <wadl:param name="size" style="query"/>
+        </wadl:request>
+        <wadl:response>
+          <wadl:representation mediaType="application/xml" element="results"/>
+          <wadl:representation mediaType="text/vnd.infomedix+xml" element="results"/>
+          <wadl:representation mediaType="text/xml" element="results"/>
+          <wadl:representation mediaType="application/vnd.infomedix+json"/>
+          <wadl:representation mediaType="application/json"/>
+          <wadl:representation mediaType="application/vnd.infomedix+xml" element="results"/>
+        </wadl:response>
+      </wadl:method>
+    </wadl:resource>
+    <wadl:resource path="/rest/patientlist/lists">
+      <wadl:method name="GET">
+        <wadl:doc>
+          <![CDATA[Return a list of the different PatientList names.]]>
+        </wadl:doc>
+        <wadl:response>
+          <wadl:representation mediaType="application/xml" element="results"/>
+          <wadl:representation mediaType="text/vnd.infomedix+xml" element="results"/>
+          <wadl:representation mediaType="text/xml" element="results"/>
+          <wadl:representation mediaType="application/vnd.infomedix+json"/>
+          <wadl:representation mediaType="application/json"/>
+          <wadl:representation mediaType="application/vnd.infomedix+xml" element="results"/>
+        </wadl:response>
+      </wadl:method>
+    </wadl:resource>
+    <wadl:resource path="/rest/search/cliniclist">
+      <wadl:method name="GET">
+        <wadl:response>
+          <wadl:representation mediaType="application/xml" element="results"/>
+          <wadl:representation mediaType="text/vnd.infomedix+xml" element="results"/>
+          <wadl:representation mediaType="text/xml" element="results"/>
+          <wadl:representation mediaType="application/vnd.infomedix+json"/>
+          <wadl:representation mediaType="application/json"/>
+          <wadl:representation mediaType="application/vnd.infomedix+xml" element="results"/>
+        </wadl:response>
+      </wadl:method>
+    </wadl:resource>
+    <wadl:resource path="/rest/search/documents">
+      <wadl:method name="GET">
+        <wadl:doc>
+          <![CDATA[Search for documents from NON-EPISODAL and Diagnostics sections.]]>
+        </wadl:doc>
+        <wadl:request>
+          <wadl:param name="patientId" style="query"/>
+          <wadl:param name="patientNs" style="query">
+            <wadl:doc>
+              <![CDATA[patient URNO (Must be used together with 'patientExtId')]]>
+            </wadl:doc>
+          </wadl:param>
+          <wadl:param name="masterId" style="query">
+            <wadl:doc>
+              <![CDATA[master id of document]]>
+            </wadl:doc>
+          </wadl:param>
+          <wadl:param name="docNs" style="query">
+            <wadl:doc>
+              <![CDATA[document namespace]]>
+            </wadl:doc>
+          </wadl:param>
+          <wadl:param name="docSectionId" style="query">
+            <wadl:doc>
+              <![CDATA[document section id
+<ul>
+<li>
+When absent, return documents from non-episodal sections excluding 'Diagnostics'
+</li>
+<li>
+When 'Diagnostics' is specified, only return documents and results from 'Diagnostics' section
+</li>
+<li>
+When episodal section is specified, it gets ignored
+</li>
+</ul>]]>
+            </wadl:doc>
+          </wadl:param>
+          <wadl:param name="docCode" style="query">
+            <wadl:doc>
+              <![CDATA[document code (Not supported for Result search)]]>
+            </wadl:doc>
+          </wadl:param>
+          <wadl:param name="docDescr" style="query">
+            <wadl:doc>
+              <![CDATA[document description]]>
+            </wadl:doc>
+          </wadl:param>
+          <wadl:param name="docMediaType" style="query">
+            <wadl:doc>
+              <![CDATA[document media type (The accepted docDate format is 'yyyyMMdd')]]>
+            </wadl:doc>
+          </wadl:param>
+          <wadl:param name="docDate" style="query">
+            <wadl:doc>
+              <![CDATA[document date]]>
+            </wadl:doc>
+          </wadl:param>
+          <wadl:param name="docState" style="query">
+            <wadl:doc>
+              <![CDATA[document state (Not supported for Result search)]]>
+            </wadl:doc>
+          </wadl:param>
+          <wadl:param name="episodeNs" style="query"/>
+          <wadl:param name="episodeId" style="query"/>
+          <wadl:param name="start" style="query"/>
+          <wadl:param name="size" style="query"/>
+          <wadl:param name="sort" style="query"/>
+          <wadl:param name="order" style="query"/>
+        </wadl:request>
+        <wadl:response>
+          <wadl:doc>
+            <![CDATA[List of DocumentDTO]]>
+          </wadl:doc>
+          <wadl:representation mediaType="application/xml" element="results"/>
+          <wadl:representation mediaType="text/vnd.infomedix+xml" element="results"/>
+          <wadl:representation mediaType="text/xml" element="results"/>
+          <wadl:representation mediaType="application/vnd.infomedix+json"/>
+          <wadl:representation mediaType="application/json"/>
+          <wadl:representation mediaType="application/vnd.infomedix+xml" element="results"/>
+        </wadl:response>
+      </wadl:method>
+      <wadl:method name="POST">
+        <wadl:doc>
+          <![CDATA[Search for documents from NON-EPISODAL and Diagnostics sections.]]>
+        </wadl:doc>
+        <wadl:request>
+          <wadl:param name="start" style="query"/>
+          <wadl:param name="size" style="query"/>
+          <wadl:param name="sort" style="query"/>
+          <wadl:param name="order" style="query"/>
+        </wadl:request>
+        <wadl:response>
+          <wadl:doc>
+            <![CDATA[List of DocumentDTO]]>
+          </wadl:doc>
+          <wadl:representation mediaType="application/xml" element="results"/>
+          <wadl:representation mediaType="text/vnd.infomedix+xml" element="results"/>
+          <wadl:representation mediaType="text/xml" element="results"/>
+          <wadl:representation mediaType="application/vnd.infomedix+json"/>
+          <wadl:representation mediaType="application/json"/>
+          <wadl:representation mediaType="application/vnd.infomedix+xml" element="results"/>
+        </wadl:response>
+      </wadl:method>
+    </wadl:resource>
+    <wadl:resource path="/rest/search/episodes">
+      <wadl:method name="GET">
+        <wadl:doc>
+          <![CDATA[Given search criteria, return list of episodes]]>
+        </wadl:doc>
+        <wadl:request>
+          <wadl:param name="patientId" style="query"/>
+          <wadl:param name="patientNs" style="query"/>
+          <wadl:param name="externalId" style="query"/>
+          <wadl:param name="externalNs" style="query"/>
+          <wadl:param name="type" style="query"/>
+          <wadl:param name="sectionId" style="query"/>
+          <wadl:param name="startDate" style="query"/>
+          <wadl:param name="endDate" style="query"/>
+          <wadl:param name="campus" style="query"/>
+          <wadl:param name="wardCode" style="query"/>
+          <wadl:param name="unitCode" style="query"/>
+          <wadl:param name="serviceType" style="query"/>
+          <wadl:param name="careType" style="query"/>
+          <wadl:param name="doctorId" style="query"/>
+          <wadl:param name="start" style="query"/>
+          <wadl:param name="size" style="query"/>
+          <wadl:param name="sort" style="query"/>
+          <wadl:param name="order" style="query"/>
+        </wadl:request>
+        <wadl:response>
+          <wadl:doc>
+            <![CDATA[list of episodes]]>
+          </wadl:doc>
+          <wadl:representation mediaType="application/xml" element="results"/>
+          <wadl:representation mediaType="text/vnd.infomedix+xml" element="results"/>
+          <wadl:representation mediaType="text/xml" element="results"/>
+          <wadl:representation mediaType="application/vnd.infomedix+json"/>
+          <wadl:representation mediaType="application/json"/>
+          <wadl:representation mediaType="application/vnd.infomedix+xml" element="results"/>
+        </wadl:response>
+      </wadl:method>
+      <wadl:method name="POST">
+        <wadl:doc>
+          <![CDATA[Given search criteria, return list of episodes]]>
+        </wadl:doc>
+        <wadl:request>
+          <wadl:param name="start" style="query"/>
+          <wadl:param name="size" style="query"/>
+          <wadl:param name="sort" style="query"/>
+          <wadl:param name="order" style="query"/>
+        </wadl:request>
+        <wadl:response>
+          <wadl:doc>
+            <![CDATA[list of episodes]]>
+          </wadl:doc>
+          <wadl:representation mediaType="application/xml" element="results"/>
+          <wadl:representation mediaType="text/vnd.infomedix+xml" element="results"/>
+          <wadl:representation mediaType="text/xml" element="results"/>
+          <wadl:representation mediaType="application/vnd.infomedix+json"/>
+          <wadl:representation mediaType="application/json"/>
+          <wadl:representation mediaType="application/vnd.infomedix+xml" element="results"/>
+        </wadl:response>
+      </wadl:method>
+    </wadl:resource>
+    <wadl:resource path="/rest/search/patients">
+      <wadl:method name="GET">
+        <wadl:request>
+          <wadl:param name="domain" style="query">
+            <wadl:doc>
+              <![CDATA[The namespace (domain) of the patient URNO.]]>
+            </wadl:doc>
+          </wadl:param>
+          <wadl:param name="familyname" style="query">
+            <wadl:doc>
+              <![CDATA[The family name of the patient(s).]]>
+            </wadl:doc>
+          </wadl:param>
+          <wadl:param name="givenname" style="query">
+            <wadl:doc>
+              <![CDATA[The given name of the patient(s).]]>
+            </wadl:doc>
+          </wadl:param>
+          <wadl:param name="dateofbirth" style="query">
+            <wadl:doc>
+              <![CDATA[The patient's date of birth.  We expect the format of the date to be yyyymmdd,
+however wildcards are allowed, where a year, month and/or day is replaced with
+a ?.
+<p>
+For example, '19791216', '1980?20', '1970??'.  We allow '???' but that
+is the same as specifying no date.]]>
+            </wadl:doc>
+          </wadl:param>
+          <wadl:param name="sex" style="query">
+            <wadl:doc>
+              <![CDATA[The sex of the patient.  These values follow what is specified by the hospital's
+PAS, although common values are:
+<p>
+M  Male
+<br>
+F  Female
+<br>
+I  Indeterminate
+<br>
+U  Unknown]]>
+            </wadl:doc>
+          </wadl:param>
+          <wadl:param name="start" style="query"/>
+          <wadl:param name="size" style="query"/>
+          <wadl:param name="sort" style="query"/>
+          <wadl:param name="order" style="query"/>
+        </wadl:request>
+        <wadl:response>
+          <wadl:doc>
+            <![CDATA[List of patientDTOs]]>
+          </wadl:doc>
+          <wadl:representation mediaType="application/xml" element="results"/>
+          <wadl:representation mediaType="text/vnd.infomedix+xml" element="results"/>
+          <wadl:representation mediaType="text/xml" element="results"/>
+          <wadl:representation mediaType="application/vnd.infomedix+json"/>
+          <wadl:representation mediaType="application/json"/>
+          <wadl:representation mediaType="application/vnd.infomedix+xml" element="results"/>
+        </wadl:response>
+      </wadl:method>
+      <wadl:method name="POST">
+        <wadl:request>
+          <wadl:param name="start" style="query"/>
+          <wadl:param name="size" style="query"/>
+          <wadl:param name="sort" style="query"/>
+          <wadl:param name="order" style="query"/>
+        </wadl:request>
+        <wadl:response>
+          <wadl:doc>
+            <![CDATA[List of patientDTOs]]>
+          </wadl:doc>
+          <wadl:representation mediaType="application/xml" element="results"/>
+          <wadl:representation mediaType="text/vnd.infomedix+xml" element="results"/>
+          <wadl:representation mediaType="text/xml" element="results"/>
+          <wadl:representation mediaType="application/vnd.infomedix+json"/>
+          <wadl:representation mediaType="application/json"/>
+          <wadl:representation mediaType="application/vnd.infomedix+xml" element="results"/>
+        </wadl:response>
+      </wadl:method>
+    </wadl:resource>
+    <wadl:resource path="/rest/search/sections">
+      <wadl:method name="GET">
+        <wadl:request>
+          <wadl:param name="patientId" style="query">
+            <wadl:doc>
+              <![CDATA[when specified, together with patientNs, sections returned will contain info for that particular patient]]>
+            </wadl:doc>
+          </wadl:param>
+          <wadl:param name="patientNs" style="query">
+            <wadl:doc>
+              <![CDATA[when specified together with patientId, sections returned will contain info for that particular patient]]>
+            </wadl:doc>
+          </wadl:param>
+        </wadl:request>
+        <wadl:response>
+          <wadl:doc>
+            <![CDATA[list of sections]]>
+          </wadl:doc>
+          <wadl:representation mediaType="application/xml" element="results"/>
+          <wadl:representation mediaType="text/vnd.infomedix+xml" element="results"/>
+          <wadl:representation mediaType="text/xml" element="results"/>
+          <wadl:representation mediaType="application/vnd.infomedix+json"/>
+          <wadl:representation mediaType="application/json"/>
+          <wadl:representation mediaType="application/vnd.infomedix+xml" element="results"/>
+        </wadl:response>
+      </wadl:method>
+    </wadl:resource>
+    <wadl:resource path="/rest/search/unitlist">
+      <wadl:method name="GET">
+        <wadl:response>
+          <wadl:representation mediaType="application/xml" element="results"/>
+          <wadl:representation mediaType="text/vnd.infomedix+xml" element="results"/>
+          <wadl:representation mediaType="text/xml" element="results"/>
+          <wadl:representation mediaType="application/vnd.infomedix+json"/>
+          <wadl:representation mediaType="application/json"/>
+          <wadl:representation mediaType="application/vnd.infomedix+xml" element="results"/>
+        </wadl:response>
+      </wadl:method>
+    </wadl:resource>
+    <wadl:resource path="/rest/search/wardlist">
+      <wadl:method name="GET">
+        <wadl:response>
+          <wadl:representation mediaType="application/xml" element="results"/>
+          <wadl:representation mediaType="text/vnd.infomedix+xml" element="results"/>
+          <wadl:representation mediaType="text/xml" element="results"/>
+          <wadl:representation mediaType="application/vnd.infomedix+json"/>
+          <wadl:representation mediaType="application/json"/>
+          <wadl:representation mediaType="application/vnd.infomedix+xml" element="results"/>
+        </wadl:response>
+      </wadl:method>
+    </wadl:resource>
+    <wadl:resource path="/rest/section/{sectionId}">
+      <wadl:param name="sectionId" style="template"/>
+      <wadl:method name="GET">
+        <wadl:request>
+          <wadl:param name="patientId" style="query"/>
+          <wadl:param name="patientNs" style="query"/>
+        </wadl:request>
+        <wadl:response>
+          <wadl:representation mediaType="application/xml" element="Section"/>
+          <wadl:representation mediaType="text/vnd.infomedix+xml" element="Section"/>
+          <wadl:representation mediaType="text/xml" element="Section"/>
+          <wadl:representation mediaType="application/vnd.infomedix+json"/>
+          <wadl:representation mediaType="application/json"/>
+          <wadl:representation mediaType="application/vnd.infomedix+xml" element="Section"/>
+        </wadl:response>
+      </wadl:method>
+    </wadl:resource>
+    <wadl:resource path="/rest/document/multipart/{masterID}">
+      <wadl:param name="masterID" style="template"/>
+      <wadl:method name="GET">
+        <wadl:request/>
+        <wadl:response>
+          <wadl:representation mediaType="multipart/vnd.infomedix+mixed"/>
+          <wadl:representation mediaType="multipart/mixed"/>
+        </wadl:response>
+      </wadl:method>
+    </wadl:resource>
+    <wadl:resource path="/rest/document/raw/{masterID}">
+      <wadl:param name="masterID" style="template"/>
+      <wadl:method name="GET">
+        <wadl:doc>
+          <![CDATA[Returns the actual document if it's an image or e-form document
+If it's a result, it returns ResultDataDTO]]>
+        </wadl:doc>
+        <wadl:request/>
+        <wadl:response>
+          <wadl:representation mediaType="*/*"/>
+          <wadl:representation mediaType="application/xml"/>
+        </wadl:response>
+      </wadl:method>
+    </wadl:resource>
+    <wadl:resource path="/rest/patient/{patientns}:{patientid}/alerts">
+      <wadl:param name="patientns" style="template"/>
+      <wadl:param name="patientid" style="template"/>
+      <wadl:method name="GET">
+        <wadl:request/>
+        <wadl:response>
+          <wadl:representation mediaType="application/xml" element="Alerts"/>
+          <wadl:representation mediaType="text/vnd.infomedix+xml" element="Alerts"/>
+          <wadl:representation mediaType="text/xml" element="Alerts"/>
+          <wadl:representation mediaType="application/vnd.infomedix+json"/>
+          <wadl:representation mediaType="application/json"/>
+          <wadl:representation mediaType="application/vnd.infomedix+xml" element="Alerts"/>
+        </wadl:response>
+      </wadl:method>
+    </wadl:resource>
+    <wadl:resource path="/rest/patientlist/episodic/{patientlist}">
+      <wadl:param name="patientlist" style="template"/>
+      <wadl:method name="GET">
+        <wadl:request>
+          <wadl:param name="start" style="query"/>
+          <wadl:param name="size" style="query"/>
+        </wadl:request>
+        <wadl:response>
+          <wadl:representation mediaType="application/xml" element="results"/>
+          <wadl:representation mediaType="text/vnd.infomedix+xml" element="results"/>
+          <wadl:representation mediaType="text/xml" element="results"/>
+          <wadl:representation mediaType="application/vnd.infomedix+json"/>
+          <wadl:representation mediaType="application/json"/>
+          <wadl:representation mediaType="application/vnd.infomedix+xml" element="results"/>
+        </wadl:response>
+      </wadl:method>
+    </wadl:resource>
+    <wadl:resource path="/rest/search/patientsForUnit/{listId}">
+      <wadl:param name="listId" style="template"/>
+      <wadl:method name="GET">
+        <wadl:request>
+          <wadl:param name="start" style="query"/>
+          <wadl:param name="size" style="query"/>
+        </wadl:request>
+        <wadl:response>
+          <wadl:representation mediaType="application/xml" element="results"/>
+          <wadl:representation mediaType="text/vnd.infomedix+xml" element="results"/>
+          <wadl:representation mediaType="text/xml" element="results"/>
+          <wadl:representation mediaType="application/vnd.infomedix+json"/>
+          <wadl:representation mediaType="application/json"/>
+          <wadl:representation mediaType="application/vnd.infomedix+xml" element="results"/>
+        </wadl:response>
+      </wadl:method>
+    </wadl:resource>
+    <wadl:resource path="/rest/search/patientsForWard/{listId}">
+      <wadl:param name="listId" style="template"/>
+      <wadl:method name="GET">
+        <wadl:request>
+          <wadl:param name="start" style="query"/>
+          <wadl:param name="size" style="query"/>
+        </wadl:request>
+        <wadl:response>
+          <wadl:representation mediaType="application/xml" element="results"/>
+          <wadl:representation mediaType="text/vnd.infomedix+xml" element="results"/>
+          <wadl:representation mediaType="text/xml" element="results"/>
+          <wadl:representation mediaType="application/vnd.infomedix+json"/>
+          <wadl:representation mediaType="application/json"/>
+          <wadl:representation mediaType="application/vnd.infomedix+xml" element="results"/>
+        </wadl:response>
+      </wadl:method>
+    </wadl:resource>
+    <wadl:resource path="/rest/patient/{patientNs}:{patientId}/episode/{episodeNs}:{episodeId}">
+      <wadl:param name="patientNs" style="template"/>
+      <wadl:param name="patientId" style="template"/>
+      <wadl:param name="episodeNs" style="template"/>
+      <wadl:param name="episodeId" style="template"/>
+      <wadl:method name="GET">
+        <wadl:request/>
+        <wadl:response>
+          <wadl:representation mediaType="application/xml" element="Episode"/>
+          <wadl:representation mediaType="text/vnd.infomedix+xml" element="Episode"/>
+          <wadl:representation mediaType="text/xml" element="Episode"/>
+          <wadl:representation mediaType="application/vnd.infomedix+json"/>
+          <wadl:representation mediaType="application/json"/>
+          <wadl:representation mediaType="application/vnd.infomedix+xml" element="Episode"/>
+        </wadl:response>
+      </wadl:method>
+    </wadl:resource>
+  </wadl:resources>
+</wadl:application>

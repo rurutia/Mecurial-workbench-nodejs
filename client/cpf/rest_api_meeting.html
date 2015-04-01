@@ -1,0 +1,142 @@
+
+<html><head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  </head>
+  <body bgcolor="#FFFFFF" text="#000000">
+    <font face="DejaVu Sans Mono">Hi guys.<br>
+      <br>
+      Here's a summary from the REST API meeting we just had.&nbsp; If
+      there's nothing else to add I'll create some tickets.<br>
+      <br>
+    </font>
+    <table border="1" cellpadding="2" cellspacing="2" width="80%">
+      <tbody>
+        <tr>
+          <td align="center" valign="top" width="5%"><font face="Droid
+              Sans Mono">1<br>
+            </font></td>
+          <td align="justify" valign="top"><font face="Droid Sans Mono">All
+              DTOs need javadoc documentation.<br>
+            </font></td>
+        </tr>
+        <tr>
+          <td align="center" valign="top" width="5%"><font face="Droid
+              Sans Mono">2<br>
+            </font></td>
+          <td align="justify" valign="top"><font face="Droid Sans Mono">All
+              attribute names will be camel-case with a leading
+              lower-case letter.&nbsp; The Win8 code will need to be reviewed
+              to see if the json/xml libraries used will blindly accept
+              any changes or refactoring will be necessary.<br>
+            </font></td>
+        </tr>
+        <tr>
+          <td align="center" valign="top" width="5%"><font face="Droid
+              Sans Mono">3<br>
+            </font></td>
+          <td align="justify" valign="top"><font face="Droid Sans Mono">Any
+              list of objects should be wrapped up in a list DTO rather
+              than a straight Java array.&nbsp; Otherwise the output appears
+              as a sequence of items all with the same element name.&nbsp; It
+              is neater to have this wrapped up.<br>
+            </font></td>
+        </tr>
+        <tr>
+          <td align="center" valign="top" width="5%"><font face="Droid
+              Sans Mono">4<br>
+            </font></td>
+          <td align="justify" valign="top"><font face="Droid Sans Mono">Null
+              elements should not appear in the output.<br>
+            </font></td>
+        </tr>
+        <tr>
+          <td align="center" valign="top" width="5%"><font face="Droid
+              Sans Mono">5<br>
+            </font></td>
+          <td align="justify" valign="top"><font face="Droid Sans Mono">SectionSummaryDTO
+              and SectionDTO should be merged into a single SectionDTO.&nbsp;
+              Point 3 means any elements not set will not appear.<br>
+            </font></td>
+        </tr>
+        <tr>
+          <td align="center" valign="top"><font face="Droid Sans Mono">6<br>
+            </font></td>
+          <td valign="top"><font face="Droid Sans Mono">Remove the
+              response DTOs such as ResultFailDTO, ResultOkDTO, etc.&nbsp; We
+              use appropriate exceptions now.<br>
+            </font></td>
+        </tr>
+        <tr>
+          <td align="center" valign="top"><font face="Droid Sans Mono">7<br>
+            </font></td>
+          <td valign="top"><font face="Droid Sans Mono">Get rid of
+              patientComponentDTO and put its attributes directly into
+              its subclasses.<br>
+            </font></td>
+        </tr>
+        <tr>
+          <td align="center" valign="top"><font face="Droid Sans Mono">8<br>
+            </font></td>
+          <td valign="top"><font face="Droid Sans Mono">Get rid of
+              DocTypeSpecificDTO and have a ResultMetadataDTO attribute
+              directly in DocumentDTO.&nbsp; If we're not dealing with a
+              result then this won't appear.<br>
+            </font></td>
+        </tr>
+        <tr>
+          <td align="center" valign="top"><font face="Droid Sans Mono">9<br>
+            </font></td>
+          <td valign="top"><font face="Droid Sans Mono">Change 'v=33' to
+              'v=321' in the RestMediaTypes.<br>
+            </font></td>
+        </tr>
+        <tr>
+          <td align="center" valign="top"><font face="Droid Sans Mono">10<br>
+            </font></td>
+          <td valign="top"><font face="Droid Sans Mono">Add the response
+              DTO to the 'vnd.infomedix' in the RestMediaType; e.g.
+              'vnd.infomedix.patient'.<br>
+            </font></td>
+        </tr>
+        <tr>
+          <td align="center" valign="top"><font face="Droid Sans Mono">11<br>
+            </font></td>
+          <td valign="top"><font face="Droid Sans Mono">Make use of
+              TypeHint and StatusCodes for enunciate documentation.&nbsp;
+              Especially important when returning generic response
+              objects and the specific type cannot be inferred.<br>
+            </font></td>
+        </tr>
+      </tbody>
+    </table>
+    <font face="DejaVu Sans Mono"><br>
+      <br>
+    </font>
+    <div class="moz-signature">-- <br>
+      <div style="font-family: DejaVu Sans
+        Mono,andale,verdana,sans-serif; color: rgb(119, 119,119);
+        font-size: 9pt;">
+        <span style="color: rgb(83, 92, 85);"><b>Phil Malin</b></span>
+        <br>
+        <span style="color: rgb(0, 130,164);"><b>InfoMedix</b></span> |
+        Development Lead<br>
+        p: 3 8615 4598 | f: 3 8615 4501 | m: 0431 942 456<br>
+        e: <a href="3D%22mailto:phil.malin@infomedix.com.au%22"><span style="color: blue;">phil.malin@infomedix.com.au</span></a><br>
+        Level 5, 451 Little Bourke Street, Melbourne VIC 3000<br>
+        <hr>
+        <span style="color: rgb(0, 130,164);"><b>Fast.&nbsp;&nbsp;&nbsp;&nbsp;Easy.&nbsp;&nbsp;&nbsp;&nbsp;Proven.</b></span><br>
+        <b><a class="moz-txt-link-abbreviated" href="3D%22http://www.infomedix.com.au%22">www.infomedix.com.au</a></b><br>
+        <span style="color: rgb(0, 130,164);"><b>A healthcare subsidiary
+            of Object Group</b></span><br>
+        <br>
+        <span style="font-size: 7pt;">This email and any files
+          transmitted
+          with it are confidential and intended solely for the use of
+          the
+          individual or entity to whom they are addressed. If you have
+          received
+          this email in error please notify Object Consulting Pty Ltd.</span>
+      </div>
+    </div>
+  </body>
+</html>
