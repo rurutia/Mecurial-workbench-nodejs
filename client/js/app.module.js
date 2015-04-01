@@ -1,7 +1,7 @@
 'use strict';
 
 // Declare app level module which depends on filters, and services
-angular.module('IMMecurialApp', ['ui.router', 'ngResource', 'menuModule', 'repoModule', 'debugAjaxModule', 'WebService', 'calculator'])
+angular.module('IMMecurialApp', ['ui.router', 'ngResource', 'menuModule', 'repoModule', 'debugAjaxModule', 'WebService', 'jira', 'calculator'])
   .provider('initConfig', function() {
   	this.$get = function() {
   		return {
@@ -20,6 +20,10 @@ angular.module('IMMecurialApp', ['ui.router', 'ngResource', 'menuModule', 'repoM
 	    .state('calculator', {
 	      url: "/calculator",
 	      templateUrl: "calculator/calculator.html"
+	    })
+	    .state('jira', {
+	      url: "/jira",
+	      templateUrl: "jira/jira.html"
 	    })
 
 	    ;
