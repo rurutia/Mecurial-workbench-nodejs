@@ -26,7 +26,7 @@ var bodyParser = require('body-parser');
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-var port = config.port        // set our port
+var port = config.port;        // set our port
 
 // ROUTES FOR OUR API
 // =============================================================================
@@ -44,6 +44,47 @@ router
 
 
 router.get('/repositories', function(req, res) {
+
+var https = require('https');
+
+var username = 'myu';
+var password = 'haoyu0726!';
+var auth = 'Basic ' + new Buffer(username + ':' + password).toString('base64');
+
+  
+
+var options = {
+  host: 'jira.objectconsulting.com.au',
+  path: '/rest/api/2/issue/IMTEST-4315',
+  headers: {
+    'Authorization': auth
+  }
+};
+
+var req1 = https.get(options, function(res) {
+  console.log('STATUS: ' + res.statusCode);
+  console.log('HEADERS: ' + JSON.stringify(res.headers));
+
+  // Buffer the body entirely for processing as a whole.
+  var bodyChunks = [];
+  res.on('data', function(chunk) {
+    // You can process streamed parts here...
+    bodyChunks.push(chunk);
+  }).on('end', function() {
+    var body = Buffer.concat(bodyChunks);
+    console.log(JSON.parse(body));
+    // ...and/or process the entire body here.
+  })
+});
+
+req1.on('error', function(e) {
+  console.log('ERROR: ' + e.message);
+});
+
+
+
+
+
         var command = "find " + config.repoDir + " -maxdepth 1 -type d";
         var ce = new commandExecutor(command);
         ce.execute(function(stdout) {
@@ -200,6 +241,50 @@ router.post('/revert/:name', function(req, res) {
         }).then(function(consoleObj) {
             res.json(consoleObj);
         });
+});
+
+router.post('/jira/any', function(req, response) {
+    console.log(req.body);
+    var data = req.body;
+
+
+    var https = require('https');
+
+    var username = 'myu';
+    var password = 'haoyu0726!';
+    var auth = 'Basic ' + new Buffer(username + ':' + password).toString('base64');
+
+      
+
+    var options = {
+      host: 'jira.objectconsulting.com.au',
+      path: '/rest/api/2/issue/IMTEST-4315',
+      headers: {
+        'Authorization': auth
+      }
+    };
+
+    var req1 = https.get(options, function(res) {
+      console.log('STATUS: ' + res.statusCode);
+      console.log('HEADERS: ' + JSON.stringify(res.headers));
+
+      // Buffer the body entirely for processing as a whole.
+      var bodyChunks = [];
+      res.on('data', function(chunk) {
+        // You can process streamed parts here...
+        bodyChunks.push(chunk);
+      }).on('end', function() {
+        var body = Buffer.concat(bodyChunks);
+        console.log(JSON.parse(body));
+        // ...and/or process the entire body here.
+        response.json(JSON.parse(body));
+      })
+    });
+
+    req1.on('error', function(e) {
+      console.log('ERROR: ' + e.message);
+    });
+
 });
 
 router.get('/config/:name', function(req, res) {

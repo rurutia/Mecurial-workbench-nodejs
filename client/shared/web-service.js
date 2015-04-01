@@ -84,6 +84,11 @@ angular.module('WebService', [])
 			_sendRequest(reqData, successCallback, errorCallback);
 		};
 
+		this.callJiraRestAny = function(data, successCallback, errorCallback) {
+			var reqData = {method: 'POST', url: '/jira/any', data: data};
+			_sendRequest(reqData, successCallback, errorCallback);
+		};
+
 	};
 
 	return new hgHttp();
