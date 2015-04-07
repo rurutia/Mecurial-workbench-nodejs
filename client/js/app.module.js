@@ -25,9 +25,11 @@ angular.module('IMMecurialApp', ['ui.router', 'ngResource', 'menuModule', 'repoM
 	      url: "/jira",
 	      templateUrl: "jira/jira.html"
 	    })
-
+      .state('links', {
+      url: "/links",
+        templateUrl: "links/links.html"
+      })
 	    ;
-
   })
   .factory('RepoList', function($resource){
 	  return $resource(

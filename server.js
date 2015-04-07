@@ -44,47 +44,6 @@ router
 
 
 router.get('/repositories', function(req, res) {
-
-var https = require('https');
-
-var username = 'myu';
-var password = 'haoyu0726!';
-var auth = 'Basic ' + new Buffer(username + ':' + password).toString('base64');
-
-  
-
-var options = {
-  host: 'jira.objectconsulting.com.au',
-  path: '/rest/api/2/issue/IMTEST-4315',
-  headers: {
-    'Authorization': auth
-  }
-};
-
-var req1 = https.get(options, function(res) {
-  console.log('STATUS: ' + res.statusCode);
-  console.log('HEADERS: ' + JSON.stringify(res.headers));
-
-  // Buffer the body entirely for processing as a whole.
-  var bodyChunks = [];
-  res.on('data', function(chunk) {
-    // You can process streamed parts here...
-    bodyChunks.push(chunk);
-  }).on('end', function() {
-    var body = Buffer.concat(bodyChunks);
-    console.log(JSON.parse(body));
-    // ...and/or process the entire body here.
-  })
-});
-
-req1.on('error', function(e) {
-  console.log('ERROR: ' + e.message);
-});
-
-
-
-
-
         var command = "find " + config.repoDir + " -maxdepth 1 -type d";
         var ce = new commandExecutor(command);
         ce.execute(function(stdout) {
@@ -257,8 +216,8 @@ router.post('/jira/any', function(req, response) {
       
 
     var options = {
-      host: 'jira.objectconsulting.com.au',
-      path: '/rest/api/2/issue/IMTEST-4315',
+      host: data.host,
+      path: data.context + data.api,
       headers: {
         'Authorization': auth
       }

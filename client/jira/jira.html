@@ -4,20 +4,15 @@
 			<div class="spacer"></div>
 			<form class="form-horizontal">
 				<div class="input-group input-group-lg">
-					<span class="input-group-addon">{{jiraReq.schema}}://{{jiraReq.baseUrl}}</span>
-					<input type="text" class="form-control" placeholder="enter REST API here..." ng-model="jiraReq.path">
+					<div ng-show="isLoading" ng-class="{'glyphicon-loader-grey':true}"></div> 
+					<span class="input-group-addon">{{jiraReq.schema}}://{{jiraReq.host}}{{jiraReq.context}}</span>
+					<input type="text" class="form-control" placeholder="enter REST API here..." ng-model="jiraReq.api" ng-keydown="callJiraRest($event)">
+	                <span class="input-group-btn">
+	                	<button type="button" id="issue" class="btn btn-warning" ng-click="callJiraRest()">Send</button>
+	              </span>
 				</div>
 			</form>
 		</div>
-	</div>
-
-  	<div class="spacer"></div>
-	
-	<div class="row">
-      <div class="col-md-12">
-        <div ng-show="command.isLoading" ng-class="{'glyphicon-loader-grey':true}"></div> 
-        <button type="button" id="btn-diff-branch" class="btn btn-warning" ng-click="callJiraRest()">Send</button>
-      </div>
 	</div>
 
 	<div class="spacer"></div>
