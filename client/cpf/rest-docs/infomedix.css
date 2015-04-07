@@ -1,8 +1,0 @@
-/* Change the background of the breadcrumb bar to the standard colour */
-.xbreadcrumbs {
-	background: #1385A8;
-}
-
-#primary li:hover {
-        border-bottom: 6px solid #1385A8;
-}
