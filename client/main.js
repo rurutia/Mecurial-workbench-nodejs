@@ -13,6 +13,7 @@ require.config({
       "web-service" : "shared/web-service",
       "menu-directive" : "menu/menu-directive",
       "repo" : "repo/repo",
+      "repo-status": "repo/repo-status/repo-status-directive",
       "debug-ajax" : "debug-ajax/debug-ajax",
       "jira" : "jira/jira",
       "calculator" : "calculator/calculator"
@@ -27,11 +28,10 @@ require.config({
 });
 
 require(['jquery', 'angular', "angular-resource", "angular-ui-router", 
-	'app', "web-service", 'menu-directive', 'repo', "debug-ajax", "jira", "calculator",
+	'app', "web-service", 'menu-directive', 'repo', 'repo-status', 
+  "debug-ajax", "jira", "calculator",
 	'scripts'], function($) {
-	      $(function () {
-
-            angular.bootstrap(document, ["IMMecurialApp"]);
-
-      });
+		$(function () {
+			angular.bootstrap(document, ["IMMecurialApp"]);
+		});
 });

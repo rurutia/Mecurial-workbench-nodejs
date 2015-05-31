@@ -1,0 +1,53 @@
+<div class="col-md-12">
+	<div class="spacer"></div>
+	<div class="btn-group">
+		<button type="button" class="btn btn-primary btn-xs" ng-click="currentStatus = null">show all status</button>
+		<button type="button" class="btn btn-primary btn-xs dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+			<span class="caret"></span>
+			<span class="sr-only">Toggle Dropdown</span>
+		</button>
+		<ul class="dropdown-menu" role="menu">
+			<li ng-repeat="(status, files) in currentRepo.statusMap"><a href="#" ng-click="changeCurrentStatus(status)">{{status}}</a></li>
+		</ul>
+	</div>
+
+	<div class="spacer"></div>
+
+	<ul class="list-group">
+		<li ng-repeat="(status, files) in currentRepo.statusMap" class="list-group-item"  ng-show="status == currentStatus || !currentStatus">
+			<div class="row">
+				<div class="col-md-2">
+					<div><b>{{status}}</b></div>
+				</div>
+
+				<!-- possible operations for different status -->
+				<div class="col-md-6" ng-show="status.indexOf('? - Unknown') > -1">
+					<button type="button" class="btn btn-success btn-xs" ng-click="action('add', status, true)">add all</button>
+					<button type="button" class="btn btn-success btn-xs" ng-click="action('add', status)">add selected</button>
+				</div>
+
+				<div class="col-md-6" ng-show="status.indexOf('A - Added') > -1">
+					<button type="button" class="btn btn-success btn-xs" ng-click="action('forget', status, true)">forget all</button>
+					<button type="button" class="btn btn-success btn-xs" ng-click="action('forget', status)">forget selected</button>
+				</div>
+
+				<div class="col-md-6" ng-show="status.indexOf('M - Modified') > -1 || status.indexOf('! - Deleted') > -1">
+					<button type="button" class="btn btn-success btn-xs" ng-click="action('revert', status, true)">revert all</button>
+					<button type="button" class="btn btn-success btn-xs" ng-click="action('revert', status)">revert selected</button>
+				</div>
+
+
+
+			</div>
+
+			<div class="spacer"></div>
+
+			<ul class="list-unstyled">
+				<li ng-repeat="file in files">
+					<input type="checkbox" style="height:15px;width:15px;" ng-model="file.isSelected" ng-click="toggleFileLinkStyle($event)"><a href="#">{{file.name }}</a>
+				</li>
+			</ul>
+		</li>
+	</ul>
+
+</div>
