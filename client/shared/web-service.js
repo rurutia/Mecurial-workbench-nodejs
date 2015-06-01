@@ -90,6 +90,11 @@ define(['angular'], function(angular) {
 				_sendRequest(reqData, successCallback, errorCallback);
 			};
 
+			this.getFileContent = function(repoName, data, successCallback, errorCallback) {
+				var reqData = {method: 'GET', url: '/file/' + repoName, params: data};
+				_sendRequest(reqData, successCallback, errorCallback);
+			};
+
 		};
 
 		return new hgHttp();

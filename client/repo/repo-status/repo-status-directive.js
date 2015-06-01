@@ -41,6 +41,20 @@ define(['repo'], function(repo) {
 					scope.statusAction = 'revert';
 				}
 
+				scope.displayFile = function(fileName) {
+					httpService.getFileContent(
+						scope.currentRepo.name,
+						{fileName : fileName},
+						function(data, status, headers, config) {
+							console.log(data);
+							// TODO: use popup window to display content
+							if(data.content) {
+								alert(data.content);
+							}
+						}
+					);
+				};
+
 				scope.action = function(action, status, isAll) {
 					var files = scope.currentRepo.statusMap[status];
 

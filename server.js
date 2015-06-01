@@ -20,11 +20,17 @@ configuror.initConfig();
 var express    = require('express');        // call express
 var app        = express();                 // define our app using express
 var bodyParser = require('body-parser');
+var cookieParser = require('cookie-parser');
 
 // configure app to use bodyParser()
 // this will let us get the data from a POST
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+app.use(cookieParser('my super secret sign key'));
+
+var servestatic = require('serve-static');
+app.use('/test', servestatic(__dirname + '/public'))
+.listen(4000);
 
 var port = config.port;        // set our port
 
@@ -37,6 +43,7 @@ router
 .use(function(req, res, next) {
     // do logging
     console.log('url: ' + req.url);
+    console.log('---client request cookies header:\n', req.headers['cookie']);
     next(); 
 })
 .use(express.static(__dirname + '/client'))
@@ -44,6 +51,11 @@ router
 
 
 router.get('/repositories', function(req, res) {
+    // res.clearCookie('name');
+    res.cookie('name3', 'foo', {"signed":"true"});
+    // res.cookie('name2', 'foo2');
+
+
         var command = "find " + config.repoDir + " -maxdepth 1 -type d";
         var ce = new commandExecutor(command);
         ce.execute(function(stdout) {
@@ -330,6 +342,45 @@ router.post('/commit/:name', function(req, res) {
         console.log(consoleObj);
         res.json({result: consoleObj});
     });
+});
+
+
+router.post('/raw/:name', function(req, res) {
+        var repoName = req.params.name;
+        var repoDir = config.repoDir + repoName;
+
+        var rawCommand = req.body;
+        var command = "hg -R " + repoDir + " " + rawCommand.command;
+
+        var ce = new commandExecutor(command);
+        ce.execute(function(stdout) {
+            console.log(stdout);
+            var infoArray = stdout.replace( /\n/g, "%").split('%');
+            var resultStr = ''
+            for(var e in infoArray) {
+                resultStr += infoArray[e] + '\n';
+            }
+            return resultStr;
+        }).then(function(consoleObj) {
+            console.log(consoleObj);
+            res.json({result: consoleObj});
+        });
+});
+
+router.get('/file/:repoName', function(req, res) {
+        if(req.params && req.params.repoName && req.query && req.query.fileName) {
+            var repoDir = config.repoDir + req.params.repoName;
+            // TODO replace 'backslash' with normal flash for linux...must be better way
+            var fileName = req.query.fileName.replace(/\\/, "/");
+            console.log(fileName);
+            var command = "less " + repoDir + "/" + fileName;
+        }
+        var ce = new commandExecutor(command);
+        ce.execute(function(stdout) {
+            return {content: stdout, command: command};
+        }).then(function(consoleObj) {
+            res.json(consoleObj);
+        });
 });
 
 

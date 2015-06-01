@@ -14,6 +14,7 @@
 
 <ul class="list-unstyled">
 	<li ng-repeat="file in files">
-		<input type="checkbox" style="height:15px;width:15px;" ng-model="file.isSelected" ng-click="toggleFileLinkStyle($event)"><a href="#">{{file.name }}</a>
+		<input type="checkbox" style="height:15px;width:15px;" ng-model="file.isSelected" ng-click="toggleFileLinkStyle($event)">
+		<a href="#" ng-click="displayFile(file.name)">{{file.name}}</a>
 	</li>
 </ul>
