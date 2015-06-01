@@ -1,0 +1,19 @@
+<div class="row">
+	<div class="col-md-2">
+		<div><b>{{status}}</b></div>
+    </div>
+
+    <div class="col-md-6">
+		<button type="button" class="btn btn-success btn-xs" ng-click="action(statusAction, status, true)">{{statusAction}} all</button>
+		<button type="button" class="btn btn-success btn-xs" ng-click="action(statusAction, status)">{{statusAction}} selected</button>
+	</div>
+
+</div>
+
+<div class="spacer"></div>
+
+<ul class="list-unstyled">
+	<li ng-repeat="file in files">
+		<input type="checkbox" style="height:15px;width:15px;" ng-model="file.isSelected" ng-click="toggleFileLinkStyle($event)"><a href="#">{{file.name }}</a>
+	</li>
+</ul>

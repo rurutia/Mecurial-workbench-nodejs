@@ -1,6 +1,5 @@
-define(['angular'], function(angular) {
-	angular.module('repoStatusModule', ['WebService'])
-	.directive("repoStatus", function(httpService) {
+define(['repo'], function(repo) {
+	repo.directive("repoStatus", function(httpService) {
 		return {
 			restrict: "E",
 			scope: {
@@ -11,7 +10,37 @@ define(['angular'], function(angular) {
 				scope.changeCurrentStatus = function(status) {
 					scope.currentStatus = status;
 				};
- 			
+			}
+		};
+	});
+
+	// child directive for each status (e.g. A, M, Delete ...)
+	repo.directive('repoSingleStatus', function(httpService) {
+		return {
+			restrict: 'E',
+			templateUrl: 'repo/repo-status/repo-single-status.html',
+			scope: {
+				"status" : "=",
+				"files" : "=",
+				"currentRepo" : "="
+			},
+			link: function(scope, elm, attrs) {
+				if(scope.status.indexOf('? - Unknown') > -1) {
+					scope.statusAction = 'add';
+				}
+				else if(scope.status.indexOf('A - Added') > -1) {
+					scope.statusAction = 'forget';
+				}
+				else if(scope.status.indexOf('M - Modified') > -1) {
+					scope.statusAction = 'revert';
+				}
+				else if(scope.status.indexOf('! - Deleted') > -1) {
+					scope.statusAction = 'revert';
+				}
+				else if(scope.status.indexOf('R - Removed') > -1) {
+					scope.statusAction = 'revert';
+				}
+
 				scope.action = function(action, status, isAll) {
 					var files = scope.currentRepo.statusMap[status];
 
@@ -64,15 +93,9 @@ define(['angular'], function(angular) {
 						break;
 					}
 
-
-
 				};
-
 			}
-			// ,
-			// controller: function(scope) {
-			// 	console.log(scope.currentRepo);
-			// }
 		};
-	});	
+	});
+
 });

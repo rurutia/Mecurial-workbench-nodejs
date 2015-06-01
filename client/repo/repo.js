@@ -1,4 +1,5 @@
 define(['angular'], function(angular) {
+  var repoModule = 
   angular.module('repoModule', ['WebService'])
   .controller('repoCtrl', function($scope, $stateParams, RepoList, $http, $rootScope, httpService, initConfig) {
     $scope.currentRepo = {
@@ -141,4 +142,6 @@ define(['angular'], function(angular) {
       };
 
   });   
+
+  return repoModule;
 });

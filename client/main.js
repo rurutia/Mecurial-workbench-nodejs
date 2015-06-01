@@ -28,7 +28,8 @@ require.config({
 });
 
 require(['jquery', 'angular', "angular-resource", "angular-ui-router", 
-	'app', "web-service", 'menu-directive', 'repo', 'repo-status', 
+	'app', "web-service", 'menu-directive', 'repo', 
+  'repo-status', 
   "debug-ajax", "jira", "calculator",
 	'scripts'], function($) {
 		$(function () {

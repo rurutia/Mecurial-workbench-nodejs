@@ -2,7 +2,7 @@
 
 // Declare app level module which depends on filters, and services
 define(['angular'], function(angular) {
-  var app = angular.module('IMMecurialApp', ['ui.router', 'ngResource', 'menuModule', 'repoModule', 'repoStatusModule', 'debugAjaxModule', 'WebService', 'jira', 'calculator'])
+  var app = angular.module('IMMecurialApp', ['ui.router', 'ngResource', 'menuModule', 'repoModule', 'debugAjaxModule', 'WebService', 'jira', 'calculator'])
   .provider('initConfig', function() {
     this.$get = function() {
       return {
