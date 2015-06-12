@@ -21,9 +21,10 @@
       <li ng-repeat="repo in repoList" ng-show="repo.isVisible"> 
         <a href="#" ng-click="getRepoDetail(repo)">
 
-          <span class="hg-menu" ng-show="repo.hasIncomingChange" ng-mouseover="popover(repo, $event)" data-toggle="popover" title="Incoming change(s)">in</span>
+          <span class="hg-menu" ng-show="repo.hasIncomingChange && !repo.isLoading" ng-mouseover="showChangesets(repo.inCommits, $event)" data-toggle="popover" title="Incoming change(s)">in</span>
+          <span class="hg-menu" ng-show="repo.hasOutgoingChange && !repo.isLoading" ng-mouseover="showChangesets(repo.outCommits, $event)" data-toggle="popover" title="Outgoing change(s)">out</span>
           <div ng-show="repo.isLoading" ng-class="{'glyphicon-loader':true}"></div> 
-
+ 
           <span ng-class="{'bold':repo.isCurrent}">{{repo.name}} ({{repo.branch.name}})</span>
         </a>
       </li>

@@ -138,10 +138,11 @@ router.get('/repository/status/:name', function(req, res) {
         });
 });
 
-router.get('/hg/in/:name', function(req, res) {
+router.get('/hg/in-out/:direction/:name', function(req, res) {
         var repoName = req.params.name;
+        var direction = req.params.direction;
         var repoDir = config.repoDir + repoName;
-        var command = "hg -R " + repoDir + " in";
+        var command = "hg -R " + repoDir + " " + direction;
 
         var ce = new commandExecutor(command);
 
@@ -175,7 +176,6 @@ router.get('/hg/in/:name', function(req, res) {
             res.json(consoleObj);
         });
 });
-
 
 router.post('/add/:name', function(req, res) {
         var repoName = req.params.name;

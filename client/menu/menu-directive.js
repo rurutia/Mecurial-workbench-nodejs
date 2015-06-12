@@ -43,7 +43,9 @@ define(['angular', 'chosen'], function(angular) {
 						angular.forEach(scope.repoList, function(repo){
 							repo.isVisible = true;
 							repo.isLoading = false;
+							repo.isLoadingHgOut = false;
 							repo.hasIncomingChange  = false;
+							repo.hasOutgoingChange  = false;
 							httpService.getRepositoryBranch(
 								repo.name, 
 								function(data) {
@@ -64,10 +66,10 @@ define(['angular', 'chosen'], function(angular) {
 					$state.go('repo', {name: currentRepo.name, branchName: currentRepo.branch.name, bar: 'bar'}, {reload:true});
 				};
 
-				scope.popover = function(currentRepo, event) {
-					if(currentRepo.commits) {
+				scope.showChangesets = function(commits, event) {
+					if(commits) {
 						var content = "";
-						angular.forEach(currentRepo.commits, function(commit, index){
+						angular.forEach(commits, function(commit, index){
 							if(index > 0) content += "<hr>";
 							angular.forEach(commit, function(value, key){
 								content += key + ":" + value + "<br>";
@@ -86,15 +88,33 @@ define(['angular', 'chosen'], function(angular) {
 
 				scope.getSourceChange = function() {
 					angular.forEach(scope.repoList, function(repo) {
+						var hgin = false, hgout = false;
 						repo.isLoading = true;
-						$http({method: 'GET', url: '/hg/in/' + repo.name}).
+						$http({method: 'GET', url: '/hg/in-out/in/' + repo.name}).
 						success(function(data, status, headers, config) {
-							repo.commits = data.commits;
+							repo.inCommits = data.commits;
 							repo.hasIncomingChange = data.commits ? true : false;
-							repo.isLoading = false;
+							hgin = true;
+							if(hgout) {
+								repo.isLoading = false;
+							}
 						}).
 						error(function(data, status, headers, config) {
 						});
+
+						repo.isLoadingHgOut = true;
+						$http({method: 'GET', url: '/hg/in-out/out/' + repo.name}).
+						success(function(data, status, headers, config) {
+							repo.outCommits = data.commits;
+							repo.hasOutgoingChange = data.commits ? true : false;
+							hgout = true;
+							if(hgin) {
+								repo.isLoading = false;
+							}
+						}).
+						error(function(data, status, headers, config) {
+						});
+
 					});
 
 				};
