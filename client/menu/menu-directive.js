@@ -91,12 +91,6 @@ define(['angular', 'chosen'], function(angular) {
 						success(function(data, status, headers, config) {
 							repo.commits = data.commits;
 							repo.hasIncomingChange = data.commits ? true : false;
-							if(repo.hasIncomingChange) {
-								repo.info = "Incoming change(s)";
-							}
-							else {
-								repo.info = '';
-							}
 							repo.isLoading = false;
 						}).
 						error(function(data, status, headers, config) {

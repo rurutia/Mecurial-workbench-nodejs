@@ -123,6 +123,14 @@ i.warning {
   }
 }
 
+.hg-menu {
+  padding: 2px;
+  background: #ec971f;
+  font-size: 90%;
+  font-weight: bold;
+  color: #fff;
+}
+
 /* taobao calculator */
 #calculator-table input {
   width: 80px;
