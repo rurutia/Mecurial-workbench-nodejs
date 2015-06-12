@@ -146,11 +146,28 @@ router.get('/hg/in/:name', function(req, res) {
         var ce = new commandExecutor(command);
 
         ce.execute(function(stdout) {
-            var infoArray = stdout.replace( /\n/g, "%").split('%');
-            var obj = { hasIncomingChange : true };
-            for(var e in infoArray) {
-                if(infoArray[e].indexOf('no changes found') > -1) {
-                    obj.hasIncomingChange = false;
+            var infoArray = stdout.split(/\n/);
+            var obj = { commits: [] };
+            var commit = {};
+            for(var i in infoArray) {
+                var line = infoArray[i];
+                if(line.indexOf('no changes found') > -1) {
+                    return {};
+                }
+                else {
+                    if(line) {
+                        key = line.split(":")[0];
+                        value = line.split(":")[1];
+                        if(key && key.indexOf("comparing") === -1 && key.indexOf("searching for changes") === -1) {
+                            commit[key] = value ? value.trim() : "";
+                        }
+                    }
+                    else {
+                        if(Object.keys(commit).length) {
+                            obj.commits.push(commit);
+                        }
+                        commit = {};
+                    }
                 }
             }
             return obj;

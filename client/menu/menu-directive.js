@@ -64,14 +64,35 @@ define(['angular', 'chosen'], function(angular) {
 					$state.go('repo', {name: currentRepo.name, branchName: currentRepo.branch.name, bar: 'bar'}, {reload:true});
 				};
 
+				scope.popover = function(currentRepo, event) {
+					if(currentRepo.commits) {
+						var content = "";
+						angular.forEach(currentRepo.commits, function(commit, index){
+							if(index > 0) content += "<hr>";
+							angular.forEach(commit, function(value, key){
+								content += key + ":" + value + "<br>";
+						    });
+						});
+						$(event.currentTarget).popover({
+				                trigger: 'hover',
+				                html: true,
+				                content: content,
+				                container: "body",
+				                template: '<div class="popover" role="tooltip" style="max-width:900px;"><div class="arrow"></div><h3 class="popover-title"></h3><div class="popover-content"><div class="data-content"></div></div></div>'
+						});
+						$(event.currentTarget).popover('show');
+					}
+				};
+
 				scope.getSourceChange = function() {
 					angular.forEach(scope.repoList, function(repo) {
 						repo.isLoading = true;
 						$http({method: 'GET', url: '/hg/in/' + repo.name}).
 						success(function(data, status, headers, config) {
-							repo.hasIncomingChange = data.hasIncomingChange;
+							repo.commits = data.commits;
+							repo.hasIncomingChange = data.commits ? true : false;
 							if(repo.hasIncomingChange) {
-								repo.info = "has incoming change(s)";
+								repo.info = "Incoming change(s)";
 							}
 							else {
 								repo.info = '';

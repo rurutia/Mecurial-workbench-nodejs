@@ -19,7 +19,7 @@
         </div>
       </li>
       <li ng-repeat="repo in repoList" ng-show="repo.isVisible"> 
-        <a href="#" ng-click="getRepoDetail(repo)" title="{{repo.info}}">
+        <a href="#" ng-click="getRepoDetail(repo)" ng-mouseover="popover(repo, $event)" data-toggle="popover" title="{{repo.info}}">
 
           <i ng-show="!repo.isLoading" ng-class="{'glyphicon':true, 'glyphicon-list-alt':true, 'warning':repo.hasIncomingChange}"></i>
           <div ng-show="repo.isLoading" ng-class="{'glyphicon-loader':true}"></div> 
