@@ -6,7 +6,7 @@ configuror.initConfig = function() {
 	var that = this; 
 
     console.log("Loading hg commit templates...");
-	var dirCommitTemplates = __dirname + '/templates/hg_commit/';
+	var dirCommitTemplates = __dirname + '/data/templates/hg_commit/';
 	fs.readdir(dirCommitTemplates ,function(err,files) {
 	    if (err) throw err;
 	    files.forEach(function(file){
