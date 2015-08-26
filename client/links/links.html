@@ -1,4 +1,34 @@
-<div class="col-sm-9" ng-controller="calculatorCtrl">
+<div class="col-sm-9" ng-controller="linksCtrl">
+  <div class="panel-group" id="accordion3" role="tablist" aria-multiselectable="true">
+    <div class="panel panel-info">
+      <div class="panel-heading" role="tab" id="headingThree">
+        <h4 class="panel-title">
+          <a data-toggle="collapse" data-parent="#accordion3" href="#collapseThree" aria-expanded="true" aria-controls="collapseThree">
+            <strong>Infomedix Wiki</strong>
+          </a>
+        </h4>
+      </div>
+      <div id="collapseThree" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingThree">
+        <div class="panel-body">
+          <table class="table">
+            <thead>
+              <tr ng-repeat="item in list" ng-if="$index == 0">
+                <th ng-repeat="(key, value) in item">{{key}}</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr ng-repeat="item in list">
+                <td ng-repeat="(key, value) in item" ng-switch on="key">
+                  <a target="_blank" href="{{value}}" ng-switch-when="URL">{{value}}</a>
+                  <span ng-switch-default>{{value}}</span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <div class="panel-group" id="accordion2" role="tablist" aria-multiselectable="true">
     <div class="panel panel-info">
@@ -22,44 +52,6 @@
               <tr>
                 <td>
                   <a href="https://jira.objectconsulting.com.au/browse/CPFDEV-3871" target="_blank">CPFDEV-3871 BDD Tests running against CPF</a>
-                </td>
-                <td></td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="panel-group" id="accordion3" role="tablist" aria-multiselectable="true">
-    <div class="panel panel-info">
-      <div class="panel-heading" role="tab" id="headingThree">
-        <h4 class="panel-title">
-          <a data-toggle="collapse" data-parent="#accordion3" href="#collapseThree" aria-expanded="true" aria-controls="collapseThree">
-            <strong>Infomedix Wiki</strong>
-          </a>
-        </h4>
-      </div>
-      <div id="collapseThree" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingThree">
-        <div class="panel-body">
-          <table class="table">
-            <thead>
-              <tr>
-                <th>Ticket</th>
-                <th>Comment</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>
-                  <a href="http://im-wiki.objectconsulting.com.au:8080/display/itst/Automated+Testing" target="_blank">Automated Testing</a>
-                </td>
-                <td></td>
-              </tr>
-              <tr>
-                <td>
-                  <a href="http://im-wiki.objectconsulting.com.au:8080/display/40des/Orbeon+4" target="_blank">Orbeon 4</a>
                 </td>
                 <td></td>
               </tr>

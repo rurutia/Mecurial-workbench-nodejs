@@ -16,6 +16,7 @@ require.config({
       "repo-status": "repo/repo-status/repo-status-directive",
       "debug-ajax" : "debug-ajax/debug-ajax",
       "jira" : "jira/jira",
+      "links" : "links/links",
       "calculator" : "calculator/calculator"
     },
     shim : {
@@ -30,7 +31,7 @@ require.config({
 require(['jquery', 'angular', "angular-resource", "angular-ui-router", 
 	'app', "web-service", 'menu-directive', 'repo', 
   'repo-status', 
-  "debug-ajax", "jira", "calculator",
+  "debug-ajax", "jira", "calculator", "links",
 	'scripts'], function($) {
 		$(function () {
 			angular.bootstrap(document, ["IMMecurialApp"]);

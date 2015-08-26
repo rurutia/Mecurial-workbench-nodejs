@@ -43,7 +43,7 @@ router
 .use(function(req, res, next) {
     // do logging
     console.log('url: ' + req.url);
-    console.log('---client request cookies header:\n', req.headers['cookie']);
+    // console.log('---client request cookies header:\n', req.headers['cookie']);
     next(); 
 })
 .use(express.static(__dirname + '/client'))
@@ -278,6 +278,11 @@ router.post('/jira/any', function(req, response) {
 router.get('/config/:name', function(req, res) {
         var configName = req.params.name;
         res.json(configuror[configName]);
+});
+
+router.get('/links/:name', function(req, res) {
+        var linkName = req.params.name;
+        res.json(configuror.links[linkName]);
 });
 
 router.post('/raw/:name', function(req, res) {
