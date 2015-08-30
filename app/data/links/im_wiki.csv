@@ -1,3 +1,6 @@
-Area,Description,URL
-3.3 design,Box Tracking,http://google.com
-4.0 design,Orbeon 4,http://google.com
+id,description,type,url
+1,Box Tracking,Wiki,http://google.com
+2,Orbeon 4,Wiki,http://google.com
+3,afd,afsd,asf
+4,dfa,adfs,asdf
+5,sf,ss,sf

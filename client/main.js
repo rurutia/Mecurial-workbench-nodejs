@@ -11,6 +11,7 @@ require.config({
       "angular-ui-router" : "js/angular-modules/angular-ui-router",
       "app" : "js/app.module",
       "web-service" : "shared/web-service",
+      "filters" : "shared/filters",
       "menu-directive" : "menu/menu-directive",
       "repo" : "repo/repo",
       "repo-status": "repo/repo-status/repo-status-directive",
@@ -29,7 +30,7 @@ require.config({
 });
 
 require(['jquery', 'angular', "angular-resource", "angular-ui-router", 
-	'app', "web-service", 'menu-directive', 'repo', 
+	'app', "web-service", "filters", 'menu-directive', 'repo', 
   'repo-status', 
   "debug-ajax", "jira", "calculator", "links",
 	'scripts'], function($) {

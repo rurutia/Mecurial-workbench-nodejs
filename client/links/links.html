@@ -10,17 +10,27 @@
       </div>
       <div id="collapseThree" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingThree">
         <div class="panel-body">
+        <button class="btn btn-success" ng-if="currentAction == 'New'" ng-click="addItem()" type="button">New</button>
+        <button class="btn btn-success" ng-if="currentAction == 'Save'" ng-click="saveItem()" type="button">Save</button>
+        <button class="btn btn-warning" ng-if="currentAction == 'Save'" ng-click="cancelItem()" type="button">Cancel</button>
+        <!-- <button class="btn btn-danger" ng-click="deleteItem()" type="button">Delete</button> -->
+
           <table class="table">
             <thead>
-              <tr ng-repeat="item in list" ng-if="$index == 0">
-                <th ng-repeat="(key, value) in item">{{key}}</th>
+              <tr ng-repeat="item in items" ng-if="$index == 0">
+                <th ng-repeat="key in item | keys">{{key}}</th>
               </tr>
             </thead>
             <tbody>
-              <tr ng-repeat="item in list">
-                <td ng-repeat="(key, value) in item" ng-switch on="key">
-                  <a target="_blank" href="{{value}}" ng-switch-when="URL">{{value}}</a>
+              <tr ng-repeat="item in items">
+                <td ng-if="!item.$$editable" ng-repeat="key in item | keys" ng-init="value=item[key]" ng-switch on="key">
+                  <a target="_blank" href="{{value}}" ng-switch-when="url">{{value}}</a>
                   <span ng-switch-default>{{value}}</span>
+                </td>
+
+                <td ng-if="item.$$editable" ng-repeat="key in item | keys">
+                  <input ng-if="key != 'id'" ng-model="item[key]"></input>
+                  <span ng-if="key === 'id'">{{item[key]}}</span>
                 </td>
               </tr>
             </tbody>

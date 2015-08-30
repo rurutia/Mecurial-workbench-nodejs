@@ -281,8 +281,66 @@ router.get('/config/:name', function(req, res) {
 });
 
 router.get('/links/:name', function(req, res) {
-        var linkName = req.params.name;
-        res.json(configuror.links[linkName]);
+    var linkName = req.params.name;
+    console.log("Loading [links] csv files...");
+
+    var list = [];
+    fs.readFile(__dirname + '/app/data/links/' + linkName + '.csv', function(err, data) {
+        if(err) {
+            throw err;
+        }
+        var lines = data.toString().split(/\r?\n/);
+        var keys = [];
+
+        for(var i=0;i<lines.length;i++) {
+            columns = lines[i].split(",");
+            if(i===0) {
+                for(var j=0;j<columns.length;j++) {
+                    if(columns[j] === "id") {
+                        keys.unshift(columns[j]);
+                    }
+                    else {
+                        keys.push(columns[j]);
+                    }
+                }
+            }
+            else {
+                obj = {};
+                for(var j=0;j<columns.length;j++) {
+                    obj[keys[j]] = columns[j];
+                }
+                console.log(obj);
+                
+                list.push(obj);
+            }
+        }
+        res.json(list);
+    })
+    
+});
+
+router.post('/links/:name', function(req, res) {
+    console.log(req.params.name + "save link......");
+    var data = req.body;
+    console.log(data);
+    var fileName = __dirname + '/app/data/links/' + req.params.name + '.csv';
+    console.log(fileName);
+    var newLine = [];
+    var headings = configuror.links[req.params.name];
+    for(var i=0;i<headings.length;i++) {
+        newLine.push(data[headings[i]]);
+    }
+    console.log(newLine.join(","));
+
+
+    fs.appendFile(fileName, "\r\n" + newLine.join(","), function (err) {
+      if (err) throw err;
+      console.log('The "data to append" was appended to file!');
+
+    });
+
+
+    res.json({});
 });
 
 router.post('/raw/:name', function(req, res) {

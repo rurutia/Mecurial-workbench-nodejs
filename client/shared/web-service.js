@@ -90,6 +90,11 @@ define(['angular'], function(angular) {
 				_sendRequest(reqData, successCallback, errorCallback);
 			};
 
+			this.addLink = function(name, newLink, successCallback, errorCallback) {
+				var reqData = {method: 'POST', url: '/links/' + name, data: newLink};
+				_sendRequest(reqData, successCallback, errorCallback);
+			};
+
 			this.callJiraRestAny = function(data, successCallback, errorCallback) {
 				var reqData = {method: 'POST', url: '/jira/any', data: data};
 				_sendRequest(reqData, successCallback, errorCallback);
